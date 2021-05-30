@@ -1,0 +1,20 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "Welcome to Visual Analytics and Applications!",
+      "description": "Welcome to the website. This hosts the write up of Archie Dolit for DataViz Makeovers and Group Projects of ISSS608 Visual Analytics and Applications!",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2021-05-30T18:48:48+08:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Visual Analytics and Applications",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2021-05-30T18:48:50+08:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}

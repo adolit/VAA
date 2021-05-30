@@ -1,0 +1,9 @@
+---
+title: "Welcome to Visual Analytics and Applications!"
+description: |
+  Welcome to the website. This hosts the write up of Archie Dolit for DataViz Makeovers and Group Projects of ISSS608 Visual Analytics and Applications!
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```

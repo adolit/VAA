@@ -1,0 +1,6 @@
+---
+title: "Visual Analytics and Applications"
+site: distill::distill_website
+listing: posts
+---
+

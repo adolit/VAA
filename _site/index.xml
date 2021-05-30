@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Visual Analytics and Applications</title>
+    <link>https://adolit-vaa.netlify.app</link>
+    <atom:link href="https://adolit-vaa.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Visual Analytics and Applications
+</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Sun, 30 May 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>DataViz Makeover 01</title>
+      <dc:creator>Archie Dolit</dc:creator>
+      <link>https://adolit-vaa.netlify.app/posts/2021-05-30-dataviz-makeover-01</link>
+      <description>The task for this makeover is to propose alternative data visualisation for the Merchandise Trade by Region/Market data provided by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz1).
+
+Through this data visualisation makeover, the principles of graphic design particularly the rules for encoding the values in graph, practical guides for using color in charts, and data-ink were applied; while hopefully preventing junk charts. Additionally, data understanding, graphical integrity, and data story annotations were also put into practice.</description>
+      <guid>https://adolit-vaa.netlify.app/posts/2021-05-30-dataviz-makeover-01</guid>
+      <pubDate>Sun, 30 May 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-05-30-dataviz-makeover-01/img/03_dashboard.png" medium="image" type="image/png" width="1169" height="827"/>
+    </item>
+  </channel>
+</rss>
