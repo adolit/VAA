@@ -7,7 +7,16 @@
     <description>Visual Analytics and Applications
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 30 May 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 20 Jun 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>DataViz Makeover 02 </title>
+      <dc:creator>Archie Dolit</dc:creator>
+      <link>https://adolit-vaa.netlify.app/posts/2021-06-20-dataviz-makeover-02</link>
+      <description>The task for this makeover is to propose  **interactive visualisation** for the infographics by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz2).</description>
+      <guid>https://adolit-vaa.netlify.app/posts/2021-06-20-dataviz-makeover-02</guid>
+      <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-06-20-dataviz-makeover-02/img/03_dashboard.png" medium="image" type="image/png" width="2349" height="1264"/>
+    </item>
     <item>
       <title>DataViz Makeover 01</title>
       <dc:creator>Archie Dolit</dc:creator>
