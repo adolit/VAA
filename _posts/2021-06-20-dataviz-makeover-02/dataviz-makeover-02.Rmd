@@ -104,7 +104,7 @@ For this makeover, all trading partners will be included except for the aggregat
 
 **#** | **Step** | **Reference Image**
 -|-----|--------
-P1| Download the file from SingStat website, unzip it, connect the Excel file (outputFile.xlsx) to Tableau Prep Builder and select “Cleaned with Data Interpreter”|![](img/prep/p1.png){width=100%} 
+P1| Download the file from [SingStat]((https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data)) website, unzip it, connect the Excel file (outputFile.xlsx) to Tableau Prep Builder and select “Cleaned with Data Interpreter”|![](img/prep/p1.png){width=100%} 
 P2|	Drag T1 to the main pane, select rows corresponding to the Variables, 2011, 2012, 2013 until 2020 using the search function|![](img/prep/p2.png){width=100%} 
 P3|	Add “Clean” step, Filter: Selected Values, search for “Total”, “Million” and exclude these rows|![](img/prep/p3.png){width=100%} 
 P4|	Select Variables column, click on the “Automatic Split”|![](img/prep/p4.png){width=100%} 
@@ -116,7 +116,7 @@ P9|	Drag Pivot 2 towards Pivot 1 and create a Join step with settings Pivot 1 Tr
 P10|	Click on the blue shaded region to investigate the cause of the mismatch. |![](img/prep/p10.png){width=90%} <br> _Based on initial analysis, there are 3,360 entries from the T1 (merchandise imports) which cannot be matched in T2 (merchandise exports). For certain trading months, Singapore is importing from these 28 trading partners but not exporting at the same time which can lead to trade balance deficit._
 P11|Create a “Export” calculated field by multiplying “Export Raw” by 1000. Similarly, create “Import” calculated field by multiplying “Export Raw” by 1000| ![](img/prep/p11.png){width=100%} 
 P12|	From the Join Results, remove the fields “Date – 1”, “Trading Partner – 1”, “Export Raw” and “Import Raw” |![](img/prep/p12.png){width=100%} 
-P13|	Download the “continents2.csv” from Kaggle website to map the trading partners (countries) to region (continent)| ![](img/prep/p13.png){width=100%} 
+P13|	Download the “continents2.csv” from [Kaggle](https://www.kaggle.com/andradaolteanu/country-mapping-iso-continent-region) website to map the trading partners (countries) to region (continent)| ![](img/prep/p13.png){width=100%} 
 P14|	Connect “continents2.csv” to Tableau Prep Builder and drag continents2 toward Join1 and create Join 2 with settings Join 1 Trading Partner = Join 2 name|![](img/prep/p14.png){width=100%} 
 P15|	Investigate the cause of the mismatch and update the continents2 name to match the Join 1 Trading Partner|![](img/prep/p15.png){width=100%} <br> _During the data clean up, “Yemen Democratic” and “Germany, Democratic Republic” of were excluded since these are old country names are no trades from 2011 to 2020. “Commonwealth of Independent States” was mapped to “Armenia”; “Other Countries in America” was mapped to “Antigua and Barbuda” and “Other Countries in Ocenia” was mapped to “American Samoa”._
 P16|From the Join Results, remove other fields from continent2 except for “region” and “sub-region”|![](img/prep/p16.png){width=100%} 
@@ -143,15 +143,15 @@ V15|	Drag “Region” to Filters pane, Show Filter and adjust to “Single Valu
 V16|	Drag “Rank by Total Trade” to Filters pane, Show Filter and adjust to “Range of values”. | ![](img/viz/v16.png){width=100%} 
 V17|	Drag “Trading Partners” to “Label” and adjust the font size to 7 and alignment to Bottom | ![](img/viz/v17.png){width=100%} 
 V18|	Enable the animation by selecting Format -> Animations. Set the Duration to 1.5 seconds and Style to Sequential. | ![](img/viz/v18.png){width=100%} 
-V19|	Edit the title as shown in the reference image and save the sheet as Bubble Plot. | ![](img/viz/v19.png){width=100%} 
-V20|	In a new sheet, drag “Date” to Columns, “Net Trade” and “Total Trade” to Rows and set to “Dual Axis”.  | ![](img/viz/v20.png){width=100%} 
+V19|	Edit the title as shown in the reference image and save the sheet as _Bubble Plot_. | ![](img/viz/v19.png){width=100%} 
+V20|	In a **new sheet**, drag “Date” to Columns, “Net Trade” and “Total Trade” to Rows and set to “Dual Axis”.  | ![](img/viz/v20.png){width=100%} 
 V21|	For SUM(Net Trade) in the Marks pane, set the graph to Bar chart. | ![](img/viz/v21.png){width=100%} 
 V22|	Adjust the color and set negative value to blue and positive to green. | ![](img/viz/v22.png){width=100%} 
 V23|	For SUM(Total Trade) in the Marks pane, set the graph to Line chart. | ![](img/viz/v23.png){width=100%} 
 V24|	Adjust the y-axis of Total Trade to gold to match the color of the line chart. | ![](img/viz/v24.png){width=100%} 
-V25|	Rotate the x-axis label and adjust the size of the graph to make it as small as possible while maintaining the details. Save the sheet as “Annual Bar and Line”.| ![](img/viz/v25.png){width=100%} 
-V26|	In the Bubble Plot Tooltip, insert the “Annual Bar and Line”. | ![](img/viz/v26.png){width=100%} 
-V27|	In a new sheet, drag “Date” to Columns and set to “Month” and “Continuous”. | ![](img/viz/v27.png){width=100%} 
+V25|	Rotate the x-axis label and adjust the size of the graph to make it as small as possible while maintaining the details. Save the sheet as _Annual Bar and Line_.| ![](img/viz/v25.png){width=100%} 
+V26|	In the Bubble Plot Tooltip, insert the Annual Bar and Line. | ![](img/viz/v26.png){width=100%} 
+V27|	In a **new sheet**, drag “Date” to Columns and set to “Month” and “Continuous”. | ![](img/viz/v27.png){width=100%} 
 V28|	Drag “Export” and “Import” to Rows and set to “Dual Axis”. | ![](img/viz/v28.png){width=100%} 
 V29|	Drag “Net Trade” two times to Rows and set to “Dual Axis”. | ![](img/viz/v29.png){width=100%} 
 V30|	Synchronize the y-axis of “Import” and uncheck the “Show Header” to hide the  second y-axis. | ![](img/viz/v30.png){width=100%} 
@@ -162,23 +162,23 @@ V34|	Drag “Trading Partner”, “Export” and “Import” into the SUM(Expo
 V35|	Adjust the SUM(Export) and SUM(Import) tooltips to highlight the date, name, export and import of the trading partner as shown by the reference image. | ![](img/viz/v35.png){width=100%} 
 V36|	Drag “Trading Partner”, “Net Trade Label”, “Net Exporter”, “Net Importer”, “Total Trade” into the SUM(Net Trade) tooltips. | ![](img/viz/v36.png){width=50%} 
 V37|	Adjust the SUM(Net Trade) tooltip to highlight the date, name, net export, net import and total trade of the trading partner as shown by the reference image. | ![](img/viz/v37.png){width=100%} 
-V38|	Edit the title as shown in the reference image and save the sheet as Monthly Bar.| ![](img/viz/v38.png){width=100%} 
-V39|	In a new sheet, drag “Date” to Columns and “Total Trade” to Rows. | ![](img/viz/v39.png){width=100%} 
+V38|	Edit the title as shown in the reference image and save the sheet as _Monthly Bar_.| ![](img/viz/v38.png){width=100%} 
+V39|	In a **new sheet**, drag “Date” to Columns and “Total Trade” to Rows. | ![](img/viz/v39.png){width=100%} 
 V40|	Create a new calculated field “Total Trade End Point” as shown in the reference image. | ![](img/viz/v40.png){width=100%} 
 V41|	In the Marks pane, adjust the graph to line. Drag “Trading Partner” to “Details” and “Label” with Label start of line and Label end of line enabled. | ![](img/viz/v41.png){width=100%} 
 V42|	Drag “Date” to Filters, Show Filter and uncheck “Show All Value” and set to “Multiple Value (list)”. | ![](img/viz/v42.png){width=100%} 
 V43|	Drag “Total Trade End Point” to Filters | ![](img/viz/v43.png){width=100%} 
 V44|	Drag “Rank by Total Trade” to Filters and set Range to values to 1 to 10. | ![](img/viz/v44.png){width=100%} 
 V45|	Drag Net Trade to Color and Adjust the color opacity to 95% and negative value to blue and positive to green. | ![](img/viz/v45.png){width=100%} 
-V46|	Drag “Total Trade” to Size and adjust the middle mark | ![](img/viz/v46.png){width=50%} 
+V46|	Drag “Total Trade” to Size and adjust to middle mark as shown in the reference image| ![](img/viz/v46.png){width=50%} 
 V47|	Drag “Net Trade Label”, “Net Exporter”, “Net Importer”, “Rank by Total Trade” into the Tooltip. | ![](img/viz/v47.png){width=50%} 
-V48|	Adjust the to highlight the date, name, net export, net import and total trade of the trading partner as shown by the reference image. | ![](img/viz/v48.png){width=100%} 
+V48|	Adjust the tooltip to highlight the date, name, net export, net import and total trade of the trading partner as shown by the reference image. | ![](img/viz/v48.png){width=100%} 
 V49|	Hide the y-axis label by unchecking the “Show Header” and formatting the Columns line to “None” | ![](img/viz/v49.png){width=50%} 
-V50|	Edit the title as shown in the reference image and save the sheet as Slopegraph. | ![](img/viz/v50.png){width=100%} 
+V50|	Edit the title as shown in the reference image and save the sheet as _Slopegraph_. | ![](img/viz/v50.png){width=100%} 
 V51|	For the Bubble Pot, Monthly Bar, and Slopegraph, set the view to “Entire View” | ![](img/viz/v51.png){width=100%} 
-V52|	Create a new dashboard, set the size to “Automatic” and follow the layout of the proposed design. | ![](img/viz/v52.png){width=100%} 
-V53|	Update the filter labels as follows: <br>- “Select # of Partners” from the “Rank by Total Trade” <br>- “Select Region” from “Region” <br>- “Select Trade Year” from “YEAR(Date)” <br>- “Select Start & End Year to Compare” from “YEAR(Date) <br>Unused filters will be removed from the dashboard.  | ![](img/viz/v25.png){width=100%} 
-V54|	In the Dashboard menu, select Action and Add “Filter Action” action as shown in the reference image and save it as “Selected Trading Partner”  | ![](img/viz/v54a.png){width=50%}  <br> ![](img/viz/v54b.png){width=50%} 
+V52|	Create a **new dashboard**, set the size to “Automatic” and follow the layout of the proposed design. | ![](img/viz/v52.png){width=100%} 
+V53|	Update the filter labels as follows: <br>- “Select # of Partners” from the “Rank by Total Trade” <br>- “Select Region” from “Region” <br>- “Select Trade Year” from “YEAR(Date)” <br>- “Select Start & End Year to Compare” from “YEAR(Date) <br>Unused filters will be removed from the dashboard.  | ![](img/viz/v53a.png){width=50%}  <br> ![](img/viz/v53b.png){width=50%} 
+V54|	In the Dashboard menu, select Action and Add “Filter Action” action as shown in the reference image and save it as “Selected Trading Partner”  | ![](img/viz/v54.png){width=100%} 
 V55|	Finally, add title, subtitle, annotation in the animated bubble plot, write up and data source reference hyperlinks.  | ![](img/viz/v55.png){width=100%} 
 
 # 5.0 Derived Insights
@@ -200,7 +200,7 @@ For 2011 to 2020, the Top 10 trading partners is largely unchanged with Malaysia
 
 ![](img/insights-02.png){width=50%}
 
-For 2011, the annual total trade of Malaysia is S\$/ 113.347B which rank 1. However, it slides to rank 2 in 2020 with lower total trade value of S\$103.450B. Malaysia also transitioned from net exporter in 2011 with a net export of 14.863B to net importer in 2020 with net import of S\$11.649B.
+For 2011, the annual total trade of Malaysia is S\$ 113.347B which rank 1. However, it slides to rank 2 in 2020 with lower total trade value of S\$103.450B. Malaysia also transitioned from net exporter in 2011 with a net export of 14.863B to net importer in 2020 with net import of S\$11.649B.
 
 ![](img/insights-02a.png){width=100%}
 
@@ -212,11 +212,11 @@ On the other hand, Mainland China rose both in ranking and total trade capturing
 
 In 2020, Taiwan is the top net importer with S\$24.932B net import. Looking back in 2011, Taiwan only ranked no. 7 with net import of S\$8.988B. 
 
-![](img/insights-03a.png){width=100%}
+![](img/insights-03b.png){width=100%}
 
 The top importer in 2011 is Saudi Arabia with net import of $S21.063B.
 
-![](img/insights-03b.png){width=100%}
+![](img/insights-03a.png){width=100%}
 
 Throughout the decade, Hong Kong has consistently maintained its top net exporter position with S\$52.509B net export in 2011 and S\$58.5B net export in 2020. 
 
