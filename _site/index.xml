@@ -7,7 +7,20 @@
     <description>Visual Analytics and Applications
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 20 Jun 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 26 Jun 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Programming Data Visualisation in R</title>
+      <dc:creator>Archie Dolit</dc:creator>
+      <link>https://adolit-vaa.netlify.app/posts/2021-06-26-programming-datavis-r</link>
+      <description>This in-class exercise explores programming data visualisation in R. It introduces the "Grammar of Graphics", ggplot2 for static graphics, ggiraph and plotly for interactive graphics, and tidyverse for the data science workflow.</description>
+      <category>Static Visualisation</category>
+      <category>Interactive Visualisation</category>
+      <category>R</category>
+      <category>In-class Exercise</category>
+      <guid>https://adolit-vaa.netlify.app/posts/2021-06-26-programming-datavis-r</guid>
+      <pubDate>Sat, 26 Jun 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-06-26-programming-datavis-r/programming-datavis-r_files/figure-html5/unnamed-chunk-8-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>DataViz Makeover 02 </title>
       <dc:creator>Archie Dolit</dc:creator>

@@ -32,7 +32,9 @@ navbar:
   - text: "Tableau In-Class Exercise"  
     href: index.html
   - text: "R In-Class Exercise"  
-    href: index.html
+    menu:
+      - text: "Programming DataVis in R"
+        href: posts/2021-06-26-programming-datavis-r/index.html
   - text: "GeoSpatial Data Science & Analytics"  
     href: index.html    
   right:

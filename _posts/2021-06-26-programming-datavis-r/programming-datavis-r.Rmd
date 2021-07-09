@@ -1,0 +1,278 @@
+---
+title: "Programming Data Visualisation in R"
+description: |
+  This in-class exercise explores programming data visualisation in R. It introduces the "Grammar of Graphics", ggplot2 for static graphics, ggiraph and plotly for interactive graphics, and tidyverse for the data science workflow.
+
+preview: img/03_dashboard.png
+author:
+  - name: Archie Dolit
+    url: https://www.linkedin.com/in/adolit/
+    affiliation: School of Computing and Information Systems, Singapore Management University
+    affiliation_url: https://scis.smu.edu.sg/
+date: 06-26-2021
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+    toc_depth: 3
+categories:
+  - Static Visualisation  
+  - Interactive Visualisation
+  - R
+  - In-class Exercise
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Installing R Packages and Importing Data
+
+## Install and Lauch R Packages
+
+Check, install and launch _ggiraph, plotly, DT_ and _tidyverse_ packages of R
+
+```{r}
+packages = c('DT', 'ggiraph', 'plotly', 'tidyverse')
+for (p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p,character.only = T)
+}
+```
+
+## Importing Data
+
+Use read_csv() of readr package to import Exam_data.csv into R
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+glimpse(exam_data)
+summary(exam_data)
+```
+
+* Year end examination grades of a cohort of primary 3 students from a local school.
+
+* There are a total of seven attributes. Four of them are categorical data type and the other three are in continuous data type.
+  + The categorical attributes are: ID, CLASS, GENDER and RACE.
+  + The continuous attributes are: MATHS, ENGLISH and SCIENCE.
+
+# Static Visualisation 
+
+## Comparing Base R Histogram vs _ggplot 2_
+
+### Base R histogram
+
+```{r}
+hist(exam_data$MATHS)
+```
+
+### _ggplot2_ histogram
+
+```{r}
+ggplot(data = exam_data, aes(x=MATHS)) +
+  geom_histogram( bins = 10,
+                  boundary = 100,
+                  color = "black",
+                  fill = "grey") +
+  ggtitle("Distribution of Maths Score")
+```
+
+
+## Essential Elements in _ggplot2_
+
+### Geometric Objects: _geom_bar_
+
+Plot a bar chart
+
+```{r}
+ggplot(data = exam_data,
+       aes(x=RACE)) +
+  geom_bar()
+```
+
+### Geometric Objects: _geom_dotplot_
+
+The width of a dot corresponds to the bin width (or maximum width, depending on the binning algorithm), and dots are stacked, with each dot representing one observation.
+
+```{r}
+ggplot(data = exam_data,
+       aes(x=MATHS,
+           fill = RACE)) +
+  geom_dotplot(binwidth = 2.5,
+               dotsize = 0.5) +
+  scale_y_continuous(NULL,
+                     breaks = NULL)
+```
+
+### Geometric Objects: _geom_histogram_
+
+geom_histogram() is used to create a simple histogram by using values in MATHS field of exam_data:
+
+ * _bin_ argument was changed to 20 from the defaul value of 30
+
+ * _color_ argument, used to change the outline colour, was set to black
+
+ * _fill_ argument, used to shade the histogram, was set to light blue
+
+```{r}
+ggplot(data = exam_data,
+       aes(x=MATHS)) + 
+  geom_histogram(bins = 20,
+                 color = "black",
+                 fill = "light blue")
+         
+```
+
+### Modifying a geometric object by changing _aes()_
+
+The interior colour of the histogram was changed using the sub-group of _aesthetics_ and _fill_ argument
+
+```{r, preview=TRUE}
+ggplot(data = exam_data,
+       aes(x=MATHS,
+           fill = GENDER)) + 
+  geom_histogram(bins = 20,
+                 color = "grey30")
+         
+```
+
+### Geometric Objects: _geom-density_
+
+geom-density() computes and plots kernel density estimate, which is a smoothed version of the histogram
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_density()
+```
+
+Two kernel density lines by using _colour_ or _fill_ arguments of _aes()_
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS, 
+           colour = GENDER)) +
+  geom_density()
+```
+
+
+### Geometric Objects: _geom_boxplot_
+
+Boxplots by using geom_boxplot()
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS,
+           x= GENDER)) +
+  geom_boxplot()
+```
+
+**Notches** are used in box plots to help visually assess whether the medians of distributions differ. If the notches do not overlap, this is evidence that the medians are different.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_boxplot(notch=TRUE)
+```
+
+### Combined _geom_ Objects
+
+Plot data points using both _geom_boxplot()_ and _geom_point()_
+
+```{r}
+ggplot(data = exam_data,
+       aes(y = MATHS,
+           x = GENDER)) + 
+  geom_boxplot() +
+  geom_point(position = "jitter",
+             size = 0.5)
+```
+
+# Interactive Data Visualisation with R - _ggiraph_ methods
+
+## Interactive dotplot
+
+### Interactivity: hovering displays student's ID
+
+```{r}
+p <- ggplot(data = exam_data,
+            aes(x = MATHS)) +
+  geom_dotplot_interactive(
+    aes(tooltip = ID),
+    stackgroups = TRUE,
+    binwidth = 1,
+    method = "histodot") +
+  scale_y_continuous(NULL,
+                     breaks = NULL)
+girafe(
+    ggobj = p,
+    width_svg = 6,
+    height_svg = 6*0.618
+  )
+```
+
+###  Interactivity: Elements associated with a data_id (i.e CLASS) will be highlighted upon mouse over
+
+```{r}
+p <- ggplot(data = exam_data,
+            aes(x = MATHS)) +
+  geom_dotplot_interactive(
+    aes(data_id = CLASS,
+        tooltip = CLASS),
+    stackgroups = TRUE,
+    binwidth = 1,
+    method = "histodot") +
+  scale_y_continuous(NULL,
+                     breaks = NULL)
+girafe(
+    ggobj = p,
+    width_svg = 6,
+    height_svg = 6*0.618
+  )
+```
+
+_css codes_ are used to change the highlighting effect
+
+```{r}
+p <- ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_dotplot_interactive(              
+    aes(data_id = CLASS),              
+    stackgroups = TRUE,                  
+    binwidth = 1,                        
+    method = "histodot") +               
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+girafe(                                  
+  ggobj = p,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618,
+  options = list(
+    opts_hover(css = "fill: #202020;"),
+    opts_hover_inv(css = "opacity:0.2;")
+  ))
+```
+
+### Click effect with onclick
+
+```{r}
+exam_data$onclick <- sprintf("window.open(\"%s%s\")",
+"https://www.moe.gov.sg/schoolfinder?journey=Primary%20school", as.character(exam_data$ID) )
+p <- ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_dotplot_interactive(              
+    aes(onclick = onclick),
+    stackgroups = TRUE,                  
+    binwidth = 1,                        
+    method = "histodot") +               
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+girafe(                                  
+  ggobj = p,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618)
+```
+
