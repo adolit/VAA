@@ -1,21 +1,26 @@
 ---
 title: "DataViz Makeover 01"
 description: |
-  The task for this makeover is to propose alternative data visualisation for the Merchandise Trade by Region/Market data provided by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz1).
+  The task for this makeover is to design and implement **static visualisation** for the Merchandise Trade by Region/Market data provided by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz1).
   
-  Through this data visualisation makeover, the principles of graphic design particularly the rules for encoding the values in graph, practical guides for using color in charts, and data-ink were applied; while hopefully preventing junk charts. Additionally, data understanding, graphical integrity, and data story annotations were also put into practice.
-  
-preview: img/03_dashboard.png
+  The proposed data visualisation is available on Tableau Public through this [link](https://public.tableau.com/app/profile/adolit/viz/DataViz_Makeover01/Dashboard).
 
+preview: img/03_dashboard.png
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
+    affiliation: School of Computing and Information Systems, Singapore Management University
+    affiliation_url: https://scis.smu.edu.sg/
 date: 05-30-2021
 output:
   distill::distill_article:
     self_contained: false
     toc: true
     toc_depth: 2
+categories:
+  - Static Visualisation
+  - Tableau
+  - DataViz Makeover
 ---
 
 ```{r setup, include=FALSE}

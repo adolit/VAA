@@ -1,18 +1,26 @@
 ---
 title: "DataViz Makeover 02 "
 description: |
-  The task for this makeover is to propose  **interactive visualisation** for the infographics by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz2).
+  The task for this makeover is to design and implement  **interactive visualisation** for the infographics by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz2).
+  
+  The proposed data visualisation is available on Tableau Public through this [link](https://public.tableau.com/app/profile/adolit/viz/DataViz_Makeover02/SGTradeDashboard).
 
 preview: img/03_dashboard.png
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
+    affiliation: School of Computing and Information Systems, Singapore Management University
+    affiliation_url: https://scis.smu.edu.sg/
 date: 06-20-2021
 output:
   distill::distill_article:
     self_contained: false
     toc: true
     toc_depth: 2
+categories:
+  - Interactive Visualisation
+  - Tableau
+  - DataViz Makeover
 ---
 
 

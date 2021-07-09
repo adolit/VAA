@@ -1,7 +1,7 @@
 ---
 title: "Welcome to Visual Analytics and Applications!"
 description: |
-  Welcome to the website. This hosts the write up of Archie Dolit for DataViz Makeovers and Group Projects of ISSS608 Visual Analytics and Applications!
+  Welcome to the website. This hosts the write up of **Archie Dolit** for DataViz Makeovers, Invididual Assignments, Group Projects and In-Class Exercises of [ISSS608 Visual Analytics and Applications](https://isss608.netlify.app/). Additionally, it also includes various topics discussed in [GeoSpatial Data Science and Analytics](https://geodsa.netlify.app/)!
 ---
 
 ```{r setup, include=FALSE}

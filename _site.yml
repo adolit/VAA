@@ -1,15 +1,45 @@
 name: "VAA"
-title: "Visual Analytics and Applications"
+title: "Visual Analytics & Applications"
 description: |
   Visual Analytics and Applications
 output_dir: "_site"
 navbar:
+  logo:
+    image: img/linkedin_logo_white.png
+    href: https://www.linkedin.com/in/adolit/
+  search: false
+  left:
+  - text: "DataViz Makeover"
+    menu:
+      - text: "Makeover 1"
+        href: posts/2021-05-30-dataviz-makeover-01/index.html
+      - text: "Makeover 2"
+        href: posts/2021-06-20-dataviz-makeover-02/index.html
+  - text: "Individual Assignment"
+    href: index.html
+  - text: "Group Project"
+    menu:
+      - text: "Proposal"
+        href: https://vapg3.netlify.app/proposal.html
+      - text: "User Guide (WIP)"
+        href: https://vapg3.netlify.app
+      - text: "R ShinyApp (WIP)"
+        href: https://vapg3.netlify.app
+      - text: "Research Paper (WIP)"
+        href: https://vapg3.netlify.app
+      - text: "Poster (WIP)"
+        href: https://vapg3.netlify.app
+  - text: "Tableau In-Class Exercise"  
+    href: index.html
+  - text: "R In-Class Exercise"  
+    href: index.html
+  - text: "GeoSpatial Data Science & Analytics"  
+    href: index.html    
   right:
     - text: "Home"
       href: index.html
     - text: "About"
       href: about.html
-      
   source_url: https://github.com/adolit/VAA
 base_url: https://adolit-vaa.netlify.app
 output: distill::distill_article

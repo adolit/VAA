@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>Visual Analytics and Applications</title>
+    <title>Visual Analytics &amp; Applications</title>
     <link>https://adolit-vaa.netlify.app</link>
     <atom:link href="https://adolit-vaa.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
     <description>Visual Analytics and Applications
@@ -12,7 +12,12 @@
       <title>DataViz Makeover 02 </title>
       <dc:creator>Archie Dolit</dc:creator>
       <link>https://adolit-vaa.netlify.app/posts/2021-06-20-dataviz-makeover-02</link>
-      <description>The task for this makeover is to propose  **interactive visualisation** for the infographics by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz2).</description>
+      <description>The task for this makeover is to design and implement  **interactive visualisation** for the infographics by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz2).
+
+The proposed data visualisation is available on Tableau Public through this [link](https://public.tableau.com/app/profile/adolit/viz/DataViz_Makeover02/SGTradeDashboard).</description>
+      <category>Interactive Visualisation</category>
+      <category>Tableau</category>
+      <category>DataViz Makeover</category>
       <guid>https://adolit-vaa.netlify.app/posts/2021-06-20-dataviz-makeover-02</guid>
       <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
       <media:content url="https://adolit-vaa.netlify.app/posts/2021-06-20-dataviz-makeover-02/img/03_dashboard.png" medium="image" type="image/png" width="2349" height="1264"/>
@@ -21,9 +26,12 @@
       <title>DataViz Makeover 01</title>
       <dc:creator>Archie Dolit</dc:creator>
       <link>https://adolit-vaa.netlify.app/posts/2021-05-30-dataviz-makeover-01</link>
-      <description>The task for this makeover is to propose alternative data visualisation for the Merchandise Trade by Region/Market data provided by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz1).
+      <description>The task for this makeover is to design and implement **static visualisation** for the Merchandise Trade by Region/Market data provided by Department of Statistics, Singapore (DOS). The details can be found [here](https://isss608.netlify.app/dataviz/dataviz1).
 
-Through this data visualisation makeover, the principles of graphic design particularly the rules for encoding the values in graph, practical guides for using color in charts, and data-ink were applied; while hopefully preventing junk charts. Additionally, data understanding, graphical integrity, and data story annotations were also put into practice.</description>
+The proposed data visualisation is available on Tableau Public through this [link](https://public.tableau.com/app/profile/adolit/viz/DataViz_Makeover01/Dashboard).</description>
+      <category>Static Visualisation</category>
+      <category>Tableau</category>
+      <category>DataViz Makeover</category>
       <guid>https://adolit-vaa.netlify.app/posts/2021-05-30-dataviz-makeover-01</guid>
       <pubDate>Sun, 30 May 2021 00:00:00 +0000</pubDate>
       <media:content url="https://adolit-vaa.netlify.app/posts/2021-05-30-dataviz-makeover-01/img/03_dashboard.png" medium="image" type="image/png" width="1169" height="827"/>
