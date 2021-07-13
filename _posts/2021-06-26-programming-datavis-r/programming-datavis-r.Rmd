@@ -3,7 +3,6 @@ title: "Programming Data Visualisation in R"
 description: |
   This in-class exercise explores programming data visualisation in R. It introduces the "Grammar of Graphics", ggplot2 for static graphics, ggiraph and plotly for interactive graphics, and tidyverse for the data science workflow.
 
-preview: img/03_dashboard.png
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
@@ -32,7 +31,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Check, install and launch _ggiraph, plotly, DT_ and _tidyverse_ packages of R
 
-```{r}
+```{r r package}
 packages = c('DT', 'ggiraph', 'plotly', 'tidyverse')
 for (p in packages){
   if(!require(p, character.only = T)){
@@ -46,7 +45,7 @@ for (p in packages){
 
 Use read_csv() of readr package to import Exam_data.csv into R
 
-```{r}
+```{r data import}
 exam_data <- read_csv("data/Exam_data.csv")
 glimpse(exam_data)
 summary(exam_data)
@@ -195,7 +194,8 @@ ggplot(data = exam_data,
 
 ## Interactive dotplot
 
-### Interactivity: hovering displays student's ID
+### Tooltip effect with _tooltip_ aesthetic
+Interactivity: hovering displays student's ID
 
 ```{r}
 p <- ggplot(data = exam_data,
@@ -214,7 +214,8 @@ girafe(
   )
 ```
 
-###  Interactivity: Elements associated with a data_id (i.e CLASS) will be highlighted upon mouse over
+###  Hover effect with *data_id* aesthetic
+Interactivity: Elements associated with a data_id (i.e CLASS) will be highlighted upon mouse over
 
 ```{r}
 p <- ggplot(data = exam_data,
@@ -234,6 +235,7 @@ girafe(
   )
 ```
 
+### Styling hover effect
 _css codes_ are used to change the highlighting effect
 
 ```{r}
@@ -276,3 +278,4 @@ girafe(
   height_svg = 6*0.618)
 ```
 
+# Interactive Data Visualisation with R - _ggiraph_ methods

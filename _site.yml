@@ -15,7 +15,7 @@ navbar:
         href: posts/2021-05-30-dataviz-makeover-01/index.html
       - text: "Makeover 2"
         href: posts/2021-06-20-dataviz-makeover-02/index.html
-  - text: "Individual Assignment"
+  - text: "Assignment (WIP)"
     href: index.html
   - text: "Group Project"
     menu:
@@ -29,9 +29,9 @@ navbar:
         href: https://vapg3.netlify.app
       - text: "Poster (WIP)"
         href: https://vapg3.netlify.app
-  - text: "Tableau In-Class Exercise"  
+  - text: "Tableau Exercise (WIP)"  
     href: index.html
-  - text: "R In-Class Exercise"  
+  - text: "R Exercise (WIP)"
     menu:
       - text: "Programming DataVis in R"
         href: posts/2021-06-26-programming-datavis-r/index.html
@@ -42,6 +42,10 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
+    - text: "Tableau Resources"
+      href: https://isss608.netlify.app/tableau
+    - text: "R Resources"
+      href: https://isss608.netlify.app/r
   source_url: https://github.com/adolit/VAA
 base_url: https://adolit-vaa.netlify.app
 output: distill::distill_article
