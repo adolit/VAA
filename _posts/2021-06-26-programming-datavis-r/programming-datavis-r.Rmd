@@ -194,7 +194,8 @@ ggplot(data = exam_data,
 
 ## Interactive dotplot
 
-### Tooltip effect with _tooltip_ aesthetic
+## Tooltip effect with _tooltip_ aesthetic
+
 Interactivity: hovering displays student's ID
 
 ```{r}
@@ -214,7 +215,8 @@ girafe(
   )
 ```
 
-###  Hover effect with *data_id* aesthetic
+##  Hover effect with *data_id* aesthetic
+
 Interactivity: Elements associated with a data_id (i.e CLASS) will be highlighted upon mouse over
 
 ```{r}
@@ -235,7 +237,8 @@ girafe(
   )
 ```
 
-### Styling hover effect
+## Styling hover effect
+
 _css codes_ are used to change the highlighting effect
 
 ```{r}
@@ -258,7 +261,7 @@ girafe(
   ))
 ```
 
-### Click effect with onclick
+## Click effect with onclick
 
 ```{r}
 exam_data$onclick <- sprintf("window.open(\"%s%s\")",
@@ -277,5 +280,175 @@ girafe(
   width_svg = 6,                         
   height_svg = 6*0.618)
 ```
+# Interactive Data Visualisation with R - _plotly_ methods
 
-# Interactive Data Visualisation with R - _ggiraph_ methods
+## Interactive scatter plot
+
+```{r}
+plot_ly(data = exam_data, 
+             x = ~MATHS, 
+             y = ~ENGLISH)
+```
+
+## Visual Variable
+
+_color_ argument is mapped to a qualitative visual variable (i.e. RACE)
+
+```{r}
+plot_ly(data = exam_data, 
+        x = ~ENGLISH, 
+        y = ~MATHS, 
+        color = ~RACE)
+```
+
+## Changing colour pallete
+
+_colors_ argument is used to change the default colour palette to [ColorBrewel](https://www.r-graph-gallery.com/38-rcolorbrewers-palettes.html) colour palette.
+
+```{r}
+plot_ly(data = exam_data, 
+        x = ~ENGLISH, 
+        y = ~MATHS, 
+        color = ~RACE, 
+        colors = "Set1")
+```
+
+## Customising colour scheme
+
+```{r}
+pal <- c("red", "purple", "blue", "green")
+plot_ly(data = exam_data, 
+        x = ~ENGLISH, 
+        y = ~MATHS, 
+        color = ~RACE, 
+        colors = pal)
+```
+
+## Customising tooltip
+
+_text_ argument is used to change the default tooltip
+
+```{r}
+plot_ly(data = exam_data, 
+        x = ~ENGLISH, 
+        y = ~MATHS,
+        text = ~paste("Student ID:", ID,
+                      "<br>Class:", CLASS),
+        color = ~RACE, 
+        colors = "Set1")
+```
+
+## Working with layout
+
+_layout_ argument is used to change the default tooltip.
+
+```{r}
+plot_ly(data = exam_data, 
+        x = ~ENGLISH, 
+        y = ~MATHS,
+        text = ~paste("Student ID:", ID,     
+                      "<br>Class:", CLASS),  
+        color = ~RACE, 
+        colors = "Set1") %>%
+  layout(title = 'English Score versus Maths Score ',
+         xaxis = list(range = c(0, 100)),
+         yaxis = list(range = c(0, 100)))
+```
+
+# Interactive Data Visualisation with R - _ggplotly_ methods
+
+## Interactive scatter plot
+
+Only extra line you need to include in the code chunk is _ggplotly()_
+
+```{r}
+p <- ggplot(data=exam_data, 
+            aes(x = MATHS,
+                y = ENGLISH)) +
+  geom_point(dotsize = 1) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+ggplotly(p)
+```
+## Coordinated Multiple Views with plotly
+
+Two scatterplots and places them next to each other side-by-side by using _subplot()_ of **plotly** package
+
+```{r}
+p1 <- ggplot(data=exam_data, 
+              aes(x = MATHS,
+                  y = ENGLISH)) +
+  geom_point(size=1) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+p2 <- ggplot(data=exam_data, 
+            aes(x = MATHS,
+                y = SCIENCE)) +
+  geom_point(size=1) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+subplot(ggplotly(p1),
+        ggplotly(p2))
+```
+
+
+## Coordinated Multiple Views with plotly
+
+To create a coordinated scatterplots, _highlight_key()_ of **plotly package** is used
+
+```{r}
+d <- highlight_key(exam_data)
+p1 <- ggplot(data=d, 
+            aes(x = MATHS,
+                y = ENGLISH)) +
+  geom_point(size=1) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+p2 <- ggplot(data=d, 
+            aes(x = MATHS,
+                y = SCIENCE)) +
+  geom_point(size=1) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+subplot(ggplotly(p1),
+        ggplotly(p2))
+```
+Click on a data point of one of the scatterplot and see how the corresponding point on the other scatterplot is selected.
+
+Thing to learn from the code chunk:
+
+* _highlight_key()_ simply creates an object of class crosstalk::SharedData.
+
+# Interactive Data Table: DT package
+* A wrapper of the JavaScript Library [DataTables](https://datatables.net/)
+
+* Data objects in R can be rendered as HTML tables using the JavaScript library 'DataTables' (typically via R Markdown or Shiny). 
+
+```{r}
+DT::datatable(exam_data)
+```
+
+
+## Linked brushing: crosstalk method
+
+Two scatterplots and places them next to each other side-by-side by using _subplot()_ of **plotly** package
+
+```{r}
+d <- highlight_key(exam_data)
+p <- ggplot(d, aes(ENGLISH, MATHS)) + 
+  geom_point(size=1) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+gg <- highlight(ggplotly(p), 
+                "plotly_selected")
+crosstalk::bscols(gg, DT::datatable(d), widths = 5)
+```
+
+Things to learn from the code chunk:
+
+* *highlight()* is a function of **plotly** package. It sets a variety of options for brushing (i.e., highlighting) multiple plots. These options are primarily designed for linking multiple plotly graphs, and may not behave as expected when linking plotly to another htmlwidget package via crosstalk.  In some cases, other htmlwidgets will respect these options, such as persistent selection in leaflet.
+
+* *bscols()* is a helper function of **crosstalk** package.  It makes it easy to put HTML elements side by side.  It can be called directly from the console but is especially designed to work in an R Markdown document.  **Warning:**  This will bring in all of Bootstrap!. 
+
+#REFERENCE
+ - [Lesson 7: Programming Data Visualisation in R In-Class Exercise](https://isss608.netlify.app/in-class_ex/in-class_ex07/in-class_ex07-interactiver#1)
