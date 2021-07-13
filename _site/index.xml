@@ -7,7 +7,19 @@
     <description>Visual Analytics and Applications
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Sat, 26 Jun 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Jul 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Programming GeoVisual Analytics with R</title>
+      <dc:creator>Archie Dolit</dc:creator>
+      <link>https://adolit-vaa.netlify.app/posts/2021-07-03-programming-geovis-r</link>
+      <description>This in-class exercise explores Analysis of Spatial Data. Specifically, it visualises the movement data from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) using sf, raster, readr, clock and tmap packages.</description>
+      <category>GeoSpatial</category>
+      <category>R</category>
+      <category>In-class Exercise</category>
+      <guid>https://adolit-vaa.netlify.app/posts/2021-07-03-programming-geovis-r</guid>
+      <pubDate>Fri, 02 Jul 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-03-programming-geovis-r/programming-geovis-r_files/figure-html5/rgb raster-1.png" medium="image" type="image/png" width="1872" height="1152"/>
+    </item>
     <item>
       <title>Programming Data Visualisation in R</title>
       <dc:creator>Archie Dolit</dc:creator>
@@ -19,7 +31,7 @@
       <category>In-class Exercise</category>
       <guid>https://adolit-vaa.netlify.app/posts/2021-06-26-programming-datavis-r</guid>
       <pubDate>Sat, 26 Jun 2021 00:00:00 +0000</pubDate>
-      <media:content url="https://adolit-vaa.netlify.app/posts/2021-06-26-programming-datavis-r/programming-datavis-r_files/figure-html5/unnamed-chunk-6-1.png" medium="image" type="image/png" width="1248" height="768"/>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-06-26-programming-datavis-r/programming-datavis-r_files/figure-html5/unnamed-chunk-6-1.png" medium="image" type="image/png" width="1872" height="1152"/>
     </item>
     <item>
       <title>DataViz Makeover 02 </title>

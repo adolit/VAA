@@ -31,15 +31,15 @@ navbar:
         href: https://vapg3.netlify.app
   - text: "Tableau Exercise (WIP)"  
     href: index.html
-  - text: "R Exercise (WIP)"
+  - text: "R Exercise"
     menu:
-      - text: "Programming DataVis in R"
+      - text: "Programming DataVis"
         href: posts/2021-06-26-programming-datavis-r/index.html
+      - text: "Programming GeoVis"
+        href: posts/2021-07-03-programming-geovis-r/index.html        
   - text: "GeoSpatial Data Science & Analytics"  
     href: index.html    
   right:
-    - text: "Home"
-      href: index.html
     - text: "About"
       href: about.html
     - text: "Tableau Resources"

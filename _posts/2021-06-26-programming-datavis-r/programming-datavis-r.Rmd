@@ -22,7 +22,12 @@ categories:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.retina=3,
+                      echo = TRUE,
+                      eval = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
 ```
 
 # Installing R Packages and Importing Data
@@ -450,5 +455,5 @@ Things to learn from the code chunk:
 
 * *bscols()* is a helper function of **crosstalk** package.  It makes it easy to put HTML elements side by side.  It can be called directly from the console but is especially designed to work in an R Markdown document.  **Warning:**  This will bring in all of Bootstrap!. 
 
-#REFERENCE
+# Reference
  - [Lesson 7: Programming Data Visualisation in R In-Class Exercise](https://isss608.netlify.app/in-class_ex/in-class_ex07/in-class_ex07-interactiver#1)

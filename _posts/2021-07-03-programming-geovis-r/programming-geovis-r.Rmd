@@ -1,0 +1,158 @@
+---
+title: "Programming GeoVisual Analytics with R"
+description: |
+  This in-class exercise explores Analysis of Spatial Data. Specifically, it visualises the movement data from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) using sf, raster, readr, clock and tmap packages.
+
+author:
+  - name: Archie Dolit
+    url: https://www.linkedin.com/in/adolit/
+    affiliation: School of Computing and Information Systems, Singapore Management University
+    affiliation_url: https://scis.smu.edu.sg/
+date: 07-03-2021
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+    toc_depth: 3
+categories:
+  - GeoSpatial
+  - R
+  - In-class Exercise
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.retina=3,
+                      echo = TRUE,
+                      eval = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+## Install and Lauch R Packages
+
+```{r r package}
+packages = c('raster', 'sf', 
+             'tmap', 'clock', 
+             'tidyverse')
+for (p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p,character.only = T)
+}
+```
+
+## Import Raster file
+```{r}
+bgmap <- raster("data/Geospatial/MC2-tourist.tif")
+bgmap
+```
+## Plot Raster Layer
+
+In general, [tm_raster()](https://cran.r-project.org/web/packages/tmap/tmap.pdf) will be used to plot a raster layer by using tmap package.
+
+```{r raster}
+tmap_mode("plot")
+tm_shape(bgmap) +
+    tm_raster(bgmap,
+              legend.show = FALSE)
+```
+However, *bgmap* layer is a three bands false colour image.  Hence, *tm_rgb()* is used instead.
+
+```{r rgb raster, preview=TRUE}
+tm_shape(bgmap) +
+tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255)
+```
+## Import Vector GIS Data File
+
+*Abila* GIS data layer is in [ESRI shapefile](https://en.wikipedia.org/wiki/Shapefile) format.  It is in vector data model and the feature class is line.
+
+Using [st_read()](https://r-spatial.github.io/sf/reference/st_read.html) of sf package, import *Abila* shapefile into R.
+
+```{r gis import}
+Abila_st <- st_read(dsn = "data/Geospatial",
+                    layer = "Abila")
+```
+
+## Import Aspatial Data
+
+Using [*read_csv()*](https://readr.tidyverse.org/reference/read_delim.html) of **readr** package, import *gps.csv* into R.
+
+```{r csv import}
+gps <- read_csv("data/aspatial/gps.csv")
+glimpse(gps)
+```
+## Convert Date-Time Field
+
+[*data-time_parse()*](https://clock.r-lib.org/reference/date-time-parse.html) of **clock** package is used to convert *Timestamp* filed from *Character* data type to *date-time* (i.e. dttm) format.
+
+```{r convert date}
+gps$Timestamp <- date_time_parse(gps$Timestamp,
+                                 zone = "",
+                                 format = "%m/%d/%Y %H:%M:%S")
+
+gps$day <- as.factor(get_day(gps$Timestamp))
+```
+
+[*as_factor()*](https://forcats.tidyverse.org/reference/as_factor.html) of [**forcats**](https://forcats.tidyverse.org/index.html) package is used to convert values in id field from numerical to factor data type.
+
+```{r factor id}
+gps$id <- as_factor(gps$id)
+
+gps
+```
+
+## Convert Aspatial Data into a Simple Feature Data
+
+Converts *gps* data frame into a simple feature data frame by using [*st_as_sf()*](https://r-spatial.github.io/sf/reference/st_as_sf.html) of **sf** packages 
+
+The *coords* argument requires you to provide the column name of the x-coordinates (i.e. long) first then followed by the column name of the y-coordinates (i.e. lat).
+
+The *crs* argument required you to provide the coordinates system in epsg format.  [EPSG: 4326](https://epsg.io/4326) is wgs84 Geographic Coordinate System.  You can search for other country's epsg code by referring to [epsg.io](https://epsg.io/).
+
+```{r covert aspatial}
+gps_sf <- st_as_sf(gps, 
+                   coords = c("long", "lat"),
+                       crs= 4326)
+gps_sf
+```
+
+## Create Movement Path from GPS Points
+
+Joins the gps points into movement paths by using the drivers' IDs as unique identifiers
+
+```{r gps movement}
+gps_path <- gps_sf %>%
+  group_by(id, day) %>%
+  summarize(m = mean(Timestamp), 
+            do_union=FALSE) %>%
+  st_cast("LINESTRING")
+
+gps_path
+```
+
+
+## Plot the gps path
+
+Plot the gps path of driver ID 1 onto the background tourist map
+
+```{r gps path}
+gps_path_selected <- gps_path %>%
+  filter(id==1)
+tmap_mode("view")
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_path_selected) +
+  tm_lines()
+```
+## Reference:
+ - [Lesson 8: Programming GeoVisual Analytics with R In-Class Exercise](https://isss608.netlify.app/in-class_ex/in-class_ex08/in-class_ex08-movementvis#1)
