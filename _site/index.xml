@@ -12,7 +12,7 @@
       <title>Text Visual Analytics with R</title>
       <dc:creator>Archie Dolit</dc:creator>
       <link>https://adolit-vaa.netlify.app/posts/2021-07-11-text-vis-r</link>
-      <description>This in-class exercise explores the concepts and methods of Text Visualisation. It visualises and analyses the text data from a collection of 20 newsgroup. It introduces the tidytext framework for processing, wrangling, analysing and visualising text data using tidytext, tidyverse, widyr, wordcloud, ggwordcloud, textplot, DT, lubridate, and hms packages.</description>
+      <description>This in-class exercise explores the concepts and methods of Text Visualisation. It visualises and analyses the text data from a collection of 20 newsgroups. It introduces the tidytext framework for processing, wrangling, analysing and visualising text data using tidytext, tidyverse, widyr, wordcloud, ggwordcloud, textplot, DT, lubridate, and hms packages.</description>
       <category>Text Visualisation</category>
       <category>R</category>
       <category>In-class Exercise</category>
