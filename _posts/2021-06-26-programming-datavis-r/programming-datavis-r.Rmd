@@ -3,6 +3,7 @@ title: "Programming Data Visualisation in R"
 description: |
   This in-class exercise explores programming data visualisation in R. It introduces the "Grammar of Graphics", ggplot2 for static graphics, ggiraph and plotly for interactive graphics, and tidyverse for the data science workflow.
 
+preview: preview_image.png
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
@@ -133,7 +134,7 @@ ggplot(data = exam_data,
 
 The interior colour of the histogram was changed using the sub-group of _aesthetics_ and _fill_ argument
 
-```{r, preview=TRUE}
+```{r}
 ggplot(data = exam_data,
        aes(x=MATHS,
            fill = GENDER)) + 

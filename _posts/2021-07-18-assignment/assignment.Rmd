@@ -1,0 +1,94 @@
+---
+title: "Visual Detective Assignment"
+description: |
+  VAST Challenge 2021: Mini-Challenge 2
+
+preview: preview_image.png  
+author:
+  - name: Archie Dolit
+    url: https://www.linkedin.com/in/adolit/
+    affiliation: School of Computing and Information Systems, Singapore Management University
+    affiliation_url: https://scis.smu.edu.sg/
+date: 07-18-2021
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+    toc_depth: 3
+categories:
+  - Visual Detective
+  - R
+  - Assignment
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.retina=3,
+                      echo = TRUE,
+                      eval = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+# Overview
+
+# Literature Review
+
+# Exploration and Data Preparation
+
+## Install and Lauch R Packages
+
+```{r r package}
+packages = c('ggiraph', 'plotly',
+             'sf', 'tmap', 
+             'igraph', 'tidygraph', 
+             'ggraph', 'visNetwork', 
+             'lubridate', 'clock',
+             'widyr', 'wordcloud',
+             'ggwordcloud', 'DT',
+             'textplot', 'hms',
+             'tidyverse')
+
+for(p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p, character.only = T)
+}
+```
+
+## Importing Data
+
+```{r}
+cc <- read_csv("data/aspatial/cc_data.csv")
+loyal <- read_csv("data/aspatial/loyalty_data.csv")
+
+head(cc)
+head(loyal)
+```
+
+# Exploratory Data Analysis
+
+# Mini Challenge 2
+
+## Q1: Most Popular Locations based on Credit Card and Loyalty Data
+
+## Q2: Anomalies in Vehicle, Credit Card and Loyalty Card Data
+
+## Q3: Owners of Credit Card and Loyalty Card
+
+## Q4: Relationships among GASTech Personnel
+
+## Q5: Evidence of Suspicious Activities
+
+## Proposed Visual Analytics RShiny App
+
+# Conclusion
+
+## Reference:
+
+* [ISSS608 Assignment Instructions](https://isss608.netlify.app/assignment.html)
+
+* [VAST Challenge 2021: Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html)
+
+* [VAST Challenge 2014: MC2 - Patterns of Life Analysis Benchmark Repository](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/)

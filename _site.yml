@@ -15,8 +15,8 @@ navbar:
         href: posts/2021-05-30-dataviz-makeover-01/index.html
       - text: "Makeover 2"
         href: posts/2021-06-20-dataviz-makeover-02/index.html
-  - text: "Assignment (WIP)"
-    href: index.html
+  - text: "Assignment"
+    href: posts/2021-07-18-assignment/index.html
   - text: "Group Project (WIP)"
     menu:
       - text: "Proposal"
@@ -40,7 +40,7 @@ navbar:
       - text: "Network DataVis"
         href: posts/2021-07-10-network-datavis-r/index.html
       - text: "Text Visualisation"
-        href: posts/2021-07-11-text-vis-r/index.html        
+        href: posts/2021-07-11-text-vis-r/index.html
   - text: "GeoSpatial Data Science & Analytics (WIP)"  
     href: index.html    
   right:

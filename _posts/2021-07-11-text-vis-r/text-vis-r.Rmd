@@ -2,7 +2,8 @@
 title: "Text Visual Analytics with R"
 description: |
   This in-class exercise explores the concepts and methods of Text Visualisation. It visualises and analyses the text data from a collection of 20 newsgroups. It introduces the tidytext framework for processing, wrangling, analysing and visualising text data using tidytext, tidyverse, widyr, wordcloud, ggwordcloud, textplot, DT, lubridate, and hms packages.
-  
+
+preview: preview_image.png  
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
@@ -177,7 +178,7 @@ words_by_newsgroup <- usenet_words %>%
 
 *wordcloud()* of **wordcloud** package is used to plot a static wordcloud
 
-```{r static wordcloud, preview = TRUE}
+```{r static wordcloud}
 wordcloud(words_by_newsgroup$word,
           words_by_newsgroup$n,
           max.words = 300)

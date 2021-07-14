@@ -3,6 +3,7 @@ title: "Network Data Visualisation and Analysis with R"
 description: |
   This in-class exercise explores Network Data Visualisation and Analysis. It visualises the GASTech emails from VAST Challenge 2021: [Mini-Challenge 1](https://vast-challenge.github.io/2021/MC1.html) using dplyr, lubridate, tidygraph, ggraph, and VisNetwork packages. Additionally, the cc_data.csv from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) was used to create Bipartitle Network.
 
+preview: preview_image.png
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
@@ -212,7 +213,7 @@ g + theme_graph()
 
 The thickness of the edges will be mapped with the *Weight* variable.
 
-```{r modify network,preview = TRUE}
+```{r modify network}
 g <- ggraph(GAStech_graph, 
             layout = "nicely") +
   geom_edge_link(aes(width=Weight), 

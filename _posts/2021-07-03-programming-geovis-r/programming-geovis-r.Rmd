@@ -3,6 +3,7 @@ title: "Programming GeoVisual Analytics with R"
 description: |
   This in-class exercise explores Analysis of Spatial Data. Specifically, it visualises the movement data from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) using sf, raster, readr, clock and tmap packages.
 
+preview: preview_image.png
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
@@ -60,7 +61,7 @@ tm_shape(bgmap) +
 ```
 However, *bgmap* layer is a three bands false colour image.  Hence, *tm_rgb()* is used instead.
 
-```{r rgb raster, preview=TRUE}
+```{r rgb raster}
 tm_shape(bgmap) +
 tm_rgb(bgmap, r = 1,g = 2,b = 3,
        alpha = NA,
