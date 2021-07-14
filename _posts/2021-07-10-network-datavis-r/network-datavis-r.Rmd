@@ -563,4 +563,4 @@ ggraph(cc_graph,
 ```
 
 ## Reference:
-* [Lesson 9: Network Data Visualisation and Analysis](https://isss608.netlify.app/in-class_ex/in-class_ex09/in-class_ex09-networkvis#1)
+* [Lesson 9: Network Data Visualisation and Analysis In-Class Exercise](https://isss608.netlify.app/in-class_ex/in-class_ex09/in-class_ex09-networkvis#1)

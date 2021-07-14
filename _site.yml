@@ -29,9 +29,9 @@ navbar:
         href: https://vapg3.netlify.app
       - text: "Poster (WIP)"
         href: https://vapg3.netlify.app
-  - text: "Tableau Exercise (WIP)"  
+  - text: "Tableau Exercises (WIP)"  
     href: index.html
-  - text: "R Exercise"
+  - text: "R Exercises"
     menu:
       - text: "Programming DataVis"
         href: posts/2021-06-26-programming-datavis-r/index.html
@@ -39,6 +39,8 @@ navbar:
         href: posts/2021-07-03-programming-geovis-r/index.html
       - text: "Network DataVis"
         href: posts/2021-07-10-network-datavis-r/index.html
+      - text: "Text Visualisation"
+        href: posts/2021-07-11-text-vis-r/index.html        
   - text: "GeoSpatial Data Science & Analytics (WIP)"  
     href: index.html    
   right:

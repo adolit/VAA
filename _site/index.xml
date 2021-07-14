@@ -7,7 +7,19 @@
     <description>Visual Analytics and Applications
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Fri, 09 Jul 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 10 Jul 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Text Visual Analytics with R</title>
+      <dc:creator>Archie Dolit</dc:creator>
+      <link>https://adolit-vaa.netlify.app/posts/2021-07-11-text-vis-r</link>
+      <description>This in-class exercise explores the concepts and methods of Text Visualisation. It visualises and analyses the text data from a collection of 20 newsgroup. It introduces the tidytext framework for processing, wrangling, analysing and visualising text data using tidytext, tidyverse, widyr, wordcloud, ggwordcloud, textplot, DT, lubridate, and hms packages.</description>
+      <category>Text Visualisation</category>
+      <category>R</category>
+      <category>In-class Exercise</category>
+      <guid>https://adolit-vaa.netlify.app/posts/2021-07-11-text-vis-r</guid>
+      <pubDate>Sat, 10 Jul 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-11-text-vis-r/text-vis-r_files/figure-html5/static wordcloud-1.png" medium="image" type="image/png" width="1872" height="1152"/>
+    </item>
     <item>
       <title>Network Data Visualisation and Analysis with R</title>
       <dc:creator>Archie Dolit</dc:creator>
@@ -17,7 +29,7 @@
       <category>R</category>
       <category>In-class Exercise</category>
       <guid>https://adolit-vaa.netlify.app/posts/2021-07-10-network-datavis-r</guid>
-      <pubDate>Fri, 09 Jul 2021 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 10 Jul 2021 00:00:00 +0000</pubDate>
       <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-10-network-datavis-r/network-datavis-r_files/figure-html5/modify network-1.png" medium="image" type="image/png" width="1872" height="1152"/>
     </item>
     <item>
