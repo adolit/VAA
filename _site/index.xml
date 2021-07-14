@@ -7,17 +7,17 @@
     <description>Visual Analytics and Applications
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Sat, 10 Jul 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 09 Jul 2021 00:00:00 +0000</lastBuildDate>
     <item>
       <title>Network Data Visualisation and Analysis with R</title>
       <dc:creator>Archie Dolit</dc:creator>
       <link>https://adolit-vaa.netlify.app/posts/2021-07-10-network-datavis-r</link>
-      <description>This in-class exercise explores Network Data Visualisation and Analysis. It visualises the GASTech emails from VAST Challenge 2021: [Mini-Challenge 1](https://vast-challenge.github.io/2021/MC1.html) using dplyr, lubridate, tidygraph, ggraph, and VisNetwork packages. Additionally, the cc_data.csv from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) was used to created Bipartitle Network.</description>
+      <description>This in-class exercise explores Network Data Visualisation and Analysis. It visualises the GASTech emails from VAST Challenge 2021: [Mini-Challenge 1](https://vast-challenge.github.io/2021/MC1.html) using dplyr, lubridate, tidygraph, ggraph, and VisNetwork packages. Additionally, the cc_data.csv from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) was used to create Bipartitle Network.</description>
       <category>Network Data</category>
       <category>R</category>
       <category>In-class Exercise</category>
       <guid>https://adolit-vaa.netlify.app/posts/2021-07-10-network-datavis-r</guid>
-      <pubDate>Sat, 10 Jul 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 09 Jul 2021 00:00:00 +0000</pubDate>
       <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-10-network-datavis-r/network-datavis-r_files/figure-html5/modify network-1.png" medium="image" type="image/png" width="1872" height="1152"/>
     </item>
     <item>
@@ -29,7 +29,7 @@
       <category>R</category>
       <category>In-class Exercise</category>
       <guid>https://adolit-vaa.netlify.app/posts/2021-07-03-programming-geovis-r</guid>
-      <pubDate>Fri, 02 Jul 2021 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 03 Jul 2021 00:00:00 +0000</pubDate>
       <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-03-programming-geovis-r/programming-geovis-r_files/figure-html5/rgb raster-1.png" medium="image" type="image/png" width="1872" height="1152"/>
     </item>
     <item>

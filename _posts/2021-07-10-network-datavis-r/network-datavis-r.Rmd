@@ -1,7 +1,7 @@
 ---
 title: "Network Data Visualisation and Analysis with R"
 description: |
-  This in-class exercise explores Network Data Visualisation and Analysis. It visualises the GASTech emails from VAST Challenge 2021: [Mini-Challenge 1](https://vast-challenge.github.io/2021/MC1.html) using dplyr, lubridate, tidygraph, ggraph, and VisNetwork packages. Additionally, the cc_data.csv from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) was used to created Bipartitle Network.
+  This in-class exercise explores Network Data Visualisation and Analysis. It visualises the GASTech emails from VAST Challenge 2021: [Mini-Challenge 1](https://vast-challenge.github.io/2021/MC1.html) using dplyr, lubridate, tidygraph, ggraph, and VisNetwork packages. Additionally, the cc_data.csv from VAST Challenge 2021: [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) was used to create Bipartitle Network.
 
 author:
   - name: Archie Dolit
