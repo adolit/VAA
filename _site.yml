@@ -17,7 +17,7 @@ navbar:
         href: posts/2021-06-20-dataviz-makeover-02/index.html
   - text: "Assignment (WIP)"
     href: index.html
-  - text: "Group Project"
+  - text: "Group Project (WIP)"
     menu:
       - text: "Proposal"
         href: https://vapg3.netlify.app/proposal.html
@@ -36,8 +36,10 @@ navbar:
       - text: "Programming DataVis"
         href: posts/2021-06-26-programming-datavis-r/index.html
       - text: "Programming GeoVis"
-        href: posts/2021-07-03-programming-geovis-r/index.html        
-  - text: "GeoSpatial Data Science & Analytics"  
+        href: posts/2021-07-03-programming-geovis-r/index.html
+      - text: "Network DataVis"
+        href: posts/2021-07-10-network-datavis-r/index.html
+  - text: "GeoSpatial Data Science & Analytics (WIP)"  
     href: index.html    
   right:
     - text: "About"

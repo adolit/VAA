@@ -44,7 +44,7 @@ for (p in packages){
 ```
 
 ## Import Raster file
-```{r}
+```{r import}
 bgmap <- raster("data/Geospatial/MC2-tourist.tif")
 bgmap
 ```
