@@ -1,14 +1,13 @@
 ---
 title: "Visual Detective Assignment"
 description: |
-  VAST Challenge 2021: Mini-Challenge 2
+  This assignment hopes to solve the 2021 IEEE Visual Analytics Science and Technology (VAST) Challenge: Mini-Challenge 2 by applying different visual analytics concepts, methods, and techniques with relevant R data visualisation and data analysis packages.
 
-preview: preview_image.png  
+preview: img/preview_image.png  
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
     affiliation: School of Computing and Information Systems, Singapore Management University
-    affiliation_url: https://scis.smu.edu.sg/
 date: 07-18-2021
 output:
   distill::distill_article:
@@ -30,13 +29,124 @@ knitr::opts_chunk$set(fig.retina=3,
                       warning = FALSE)
 ```
 
-# Overview
+# 1. Overview
 
-# Literature Review
+The VAST Challenge 2021 is a rerun of the VAST Challenge 2014 with the same story line about the fictitious island country of Kronos, the company GASTech, and the incidents involving missing GAStech employees. However, the data for the VAST Challenge 2021 were modified and new questions were introduced.  
 
-# Exploration and Data Preparation
+Using the two weeks worth of data leading to the disappearance of the GAStech employees, the goal of Mini-Challenge 2 is to analyze the movement and tracking of company vehicles GPS data. Additionally, together with GAStech employee’s credit card transactions and Kronos Kares loyalty card data, the additional objectives are:
 
-## Install and Lauch R Packages
+- Identify anomalies and suspicious behaviours
+
+- Identify which people use which credit card and loyalty cards
+
+# 2. Literature Review
+
+## 2.1 Data Understanding
+
+The 2021 data was compared against 2014 data using the _diffr_ package to better understand the variations of VAST Challenge 2021 from the previous year's challenge. 
+
+- _car-assignments.csv_ contains of vehicle assignments by employee. It lists the employee name, Car ID assignment, employee department, and employee job title.
+
+  + Based on the result of code chunk below, all employee names are the same. However, there are 8 employees with different car ID assignment and employee job title. For example, _Calixto,Nils_ was assigned to _CardID 1_ as _IT Helpdesk_ in 2021 challenge but was previously assigned to _CardID 8_ as _IT Technician_ in 2014 challenge.
+
+```{r diff car, eval = FALSE}
+library(diffr)
+diffr("data/aspatial/car-assignments.csv", "data_2014/aspatial/car-assignments.csv")
+```
+![](img/diff_car.png)
+
+- _loyalty_data.csv_ contains the loyalty card transaction data. It lists the date of the transaction, name of the business, price, and the unique 5-character code loyalty number.
+
+  + The major difference in VAST Challenge 2021 is that loyalty number was used instead of employee names. Other minor differences are the date format ( _line:2_ **0**1/**0**6/2014 vs 1/6/2014) and price of transaction ( example: _line:1145_ Hippokampos,**14.89** vs. Hippokampos,**17.66**).
+
+```{r diff loyal, eval = FALSE}
+diffr("data/aspatial/loyalty_data.csv", "data_2014/aspatial/loyalty_data.csv")
+```
+![](img/diff_loyalty.png)
+
+- _cc_data.csv_ contains the credit and debit card transaction data. It lists the date and time of the transaction, name of the business, price, and last 4 digits of the credit or debit card number.
+
+  + Similar to the loyalty data, the major difference in that last 4 digits was used instead of employee names. Other minor differences are the date and time format ( _line:2_ **0**1/**0**6/2014 07:28 vs 1/6/2014 7:28) as well as the time and price of transaction ( example: _line:701_ 01/12/2014 **13:17**,Ouzeri Elian,**98.45**  vs. 1/12/2014 **13:03**,Ouzeri Elian,**38.5**).
+
+
+```{r diff cc, eval = FALSE}
+diffr("data/aspatial/cc_data.csv", "data_2014/aspatial/cc_data.csv")
+```
+
+![](img/diff_cc.png){width=80%}
+
+- _gps.csv_ contains the vehicle tracking data. It lists the date and time, car ID, latitude, and longitude coordinates with *685,170* entries. 
+
+  + The file size is too large and it is not practical to do a line by line comparison. Instead of using the _diffr_ , the _md5sum_ was used to compute the MD5 hashes and detect if there are differences between the 2 files. Based on the result of code chunk below, there are no differences between the 2021 and 2014 gps.csv file.
+
+```{r diff gps}
+library(tools)
+md5sum("data/aspatial/gps.csv") == md5sum("data_2014/aspatial/gps.csv")
+```
+- _MC2-Tourist.jpg_ is the tourist map of Abila, the Capital city of Kronos, with identified location of interest. 
+
+  + Based on visual inspection and _md5sum_ code chunk below, there are no differences between the 2021 and 2014 tourist map.
+  
+2021 VAST Challenge Map | 2014 VAST Challenge Map
+---| ---
+![](data/aspatial/MC2-tourist.jpg){width=95%} |![](data_2014/aspatial/MC2-tourist.jpg){width=95%}
+
+```{r diff map}
+md5sum("data/aspatial/MC2-tourist.jpg") == md5sum("data_2014/aspatial/MC2-tourist.jpg")
+```
+- _ESRI shapefiles_ of Abila and Kronos contains the geospatial vector data format for storing geometric location and associated attribute information.
+
+  + Based on the _md5sum_ code chunk below, there are also no differences between the 2021 and 2014 shapefiles.
+
+```{r diff shapefiles}
+md5sum("data/Geospatial/Abila.dbf") == md5sum("data_2014/Geospatial/Abila.dbf")
+md5sum("data/Geospatial/Abila.kml") == md5sum("data_2014/Geospatial/Abila.kml")
+md5sum("data/Geospatial/Abila.prj") == md5sum("data_2014/Geospatial/Abila.prj")
+md5sum("data/Geospatial/Abila.sbn") == md5sum("data_2014/Geospatial/Abila.sbn")
+md5sum("data/Geospatial/Abila.sbx") == md5sum("data_2014/Geospatial/Abila.sbx")
+md5sum("data/Geospatial/Abila.shp") == md5sum("data_2014/Geospatial/Abila.shp")
+md5sum("data/Geospatial/Abila.shx") == md5sum("data_2014/Geospatial/Abila.shx")
+
+md5sum("data/Geospatial/Kronos Island.kmz") == md5sum("data_2014/Geospatial/Kronos Island.kmz")
+md5sum("data/Geospatial/Kronos_Island.dbf") == md5sum("data_2014/Geospatial/Kronos_Island.dbf")
+md5sum("data/Geospatial/Kronos_Island.prj") == md5sum("data_2014/Geospatial/Kronos_Island.prj")
+md5sum("data/Geospatial/Kronos_Island.sbn") == md5sum("data_2014/Geospatial/Kronos_Island.sbn")
+md5sum("data/Geospatial/Kronos_Island.sbx") == md5sum("data_2014/Geospatial/Kronos_Island.sbx")
+md5sum("data/Geospatial/Kronos_Island.shp") == md5sum("data_2014/Geospatial/Kronos_Island.shp")
+md5sum("data/Geospatial/Kronos_Island.shx") == md5sum("data_2014/Geospatial/Kronos_Island.shx")
+```
+## 2.2 Guide Questions
+
+VAST Challenge 2014 focuses about 'Patterns of Life' analysis. It asked about the common daily routines of GAStech employees and what does a day in the life of typical GAStech employee look like.  
+
+In contrast, VAST Challenge 2021 asks to infer the owners of each credit card and loyalty card since the employee names were replaced by  last 4 digits of the credit or debit card number and unique 5-character code loyalty number.
+
+Nevertheless, both challenges want to know about _unusual events_, _anomalies_, and _evidences of suspicious activities_.
+
+## 2.3 Visualisation Approaches
+
+By reviewing the submissions for [VAST Challenge 2014](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/), several approaches were identified to be relevant to the current VAST challenge and doable using R data visualisation and data analysis packages.
+
+Mini-Challenge 2 emphasizes the geospatial-temporal data analysis with the financial data from the credit card and loyalty transactions. The common approach from several submissions was to highlight roadway paths of the car and indicate the position and time relationship. The figure below from the [Peking University](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/entries/Peking%20University/), recipient of Excellent Comprehensive Visual Analysis System, shows an example geospatial-temporal visualisation.
+
+![](img/litreview_01_peking.png)
+
+This example of movement data visualisation can be done using using _sf_, _raster_, _readr_, _clock_ and _tmap_ packages. It can also be improved by having an interactive map and tooltip information.
+
+
+
+
+
+
+
+
+
+
+
+
+# 3. Exploration and Data Preparation
+
+## 3.1 Install and Lauch R Packages
 
 ```{r r package}
 packages = c('ggiraph', 'plotly',
@@ -92,3 +202,5 @@ head(loyal)
 * [VAST Challenge 2021: Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html)
 
 * [VAST Challenge 2014: MC2 - Patterns of Life Analysis Benchmark Repository](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/)
+
+* Whiting, Mark & Cook, Kristin & Grinstein, Georges & Liggett, Kristen & Cooper, Michael & Fallon, John & Morin, Marc. (2014). [VAST challenge 2014: The Kronos incident](http://vis.cs.ucdavis.edu/vis2014papers/VIS_Conference/vast/challenge/whiting.pdf)
