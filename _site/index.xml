@@ -21,6 +21,18 @@
       <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-18-assignment/preview_image.png" medium="image" type="image/png" width="1872" height="1152"/>
     </item>
     <item>
+      <title>Getting to Know Shiny</title>
+      <dc:creator>Archie Dolit</dc:creator>
+      <link>https://adolit-vaa.netlify.app/posts/2021-07-17-know-shiny</link>
+      <description>This in-class exercise introduces Shiny as an example of web-enabled visual analytics application.</description>
+      <category>RShiny</category>
+      <category>R</category>
+      <category>In-Class Exercise</category>
+      <guid>https://adolit-vaa.netlify.app/posts/2021-07-17-know-shiny</guid>
+      <pubDate>Sat, 17 Jul 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-17-know-shiny/preview_image.png" medium="image" type="image/png" width="1900" height="934"/>
+    </item>
+    <item>
       <title>Text Visual Analytics with R</title>
       <dc:creator>Archie Dolit</dc:creator>
       <link>https://adolit-vaa.netlify.app/posts/2021-07-11-text-vis-r</link>

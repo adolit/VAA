@@ -41,6 +41,8 @@ navbar:
         href: posts/2021-07-10-network-datavis-r/index.html
       - text: "Text Visualisation"
         href: posts/2021-07-11-text-vis-r/index.html
+      - text: "Getting to Know Shiny"
+        href: posts/2021-07-17-know-shiny/index.html        
   - text: "GeoSpatial Data Science & Analytics (WIP)"  
     href: index.html    
   right:

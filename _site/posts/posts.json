@@ -23,6 +23,29 @@
     "preview_height": 1152
   },
   {
+    "path": "posts/2021-07-17-know-shiny/",
+    "title": "Getting to Know Shiny",
+    "description": "This in-class exercise introduces Shiny as an example of web-enabled visual analytics application.",
+    "author": [
+      {
+        "name": "Archie Dolit",
+        "url": "https://www.linkedin.com/in/adolit/"
+      }
+    ],
+    "date": "2021-07-17",
+    "categories": [
+      "RShiny",
+      "R",
+      "In-Class Exercise"
+    ],
+    "contents": "\r\n\r\nContents\r\nShiny: Overview\r\nWhat is so special about Shiny?\r\nThe Structure of a Shiny app\r\nShiny’s user-interface, ui.R\r\nShiny’s server server.R\r\n\r\nBuilding a Shiny app\r\nShiny app example\r\nShiny app code\r\nReference\r\n\r\nShiny: Overview\r\nShiny is an open package from RStudio.\r\nIt provides a web application framework to create interactive web applications (visualization) called “Shiny apps”.\r\nIt can be found at https://shiny.rstudio.com/\r\nWhat is so special about Shiny?\r\nIt allows R users:\r\nto build and share highly interactive web-enabled applications without having to invest significant among of time and efforts to master core web design technologies such as html5, Javascript and CSS.\r\nto integrate the analytical and visualisation packages of R without having to change from one programming language to another.\r\nThe Structure of a Shiny app\r\nA Shiny app comprises of two components, namely:\r\nuser-interface script, and\r\nserver script.\r\nShiny’s user-interface, ui.R\r\nThe ui.R script controls the layout and appearance of a shiny app.\r\nIt is defined in a source script name ui.R.\r\nActually, ui is a web document that the user gets to see, it is based on the famous Twitter bootstrap framework, which makes the look and layout highly customizable and fully responsive.\r\nIn fact, you only need to know R and how to use the shiny package to build a pretty web application. Also, a little knowledge of HTML, CSS, and JavaScript may help.\r\nShiny’s server server.R\r\nThe server.R script contains the instructions that your computer needs to build your Shiny app.\r\nYou are expected to:\r\nknow how to program with R.\r\nfamiliar with Tidyverse, specifically dplyr, tidyr and ggplot2\r\nBuilding a Shiny app\r\nA Shiny app can be in a form of a single file called app.R.\r\nAlternatively, a Shiny app can be also created using separate ui.R and server.R files.\r\nThe separate files way is preferred when the app is complex and involves more codes.\r\nShiny app example\r\nThe preview of Shiny app can be seen below:\r\n\r\nThe app reads the Exam_data.csv and generate a histogram. The user can select the subject to be displayed, the number of bins for the histogram, and enable/disable the data table. In this simple Shiny app, we were able to load the dataset, work with titlePanel, sidebarLayout(), checkboxInput(), plotOutput(), dataTableOutput(), renderPlot(), and renderDataTable().\r\nShiny app code\r\nThe code chunk can be seen below:\r\n\r\n\r\nlibrary(shiny)\r\nlibrary(tidyverse)\r\n\r\nexam <- read_csv(\"data/Exam_data.csv\")\r\n\r\n# Define UI for application\r\nui <- fluidPage(\r\n    titlePanel(\"Pupils Examination Results Dashboard\"),\r\n    sidebarLayout(\r\n        sidebarPanel(\r\n            selectInput(inputId = \"variable\",\r\n                        label = \"Subject: \",\r\n                        choices = c(\"English\" = \"ENGLISH\",\r\n                                    \"Maths\" = \"MATHS\",\r\n                                    \"Science\" = \"SCIENCE\"),\r\n                        selected = \"ENGLISH\"),\r\n            sliderInput(inputId = \"bin\",\r\n                        label = \"Number of bins\",\r\n                        min = 5,\r\n                        max = 20,\r\n                        value = c(10)),\r\n            checkboxInput(input = \"show_data\",\r\n                          label = \"Show data table\",\r\n                          value = TRUE)\r\n        ),\r\n        mainPanel(\r\n            plotOutput(\"distPlot\"),\r\n            DT::dataTableOutput(outputId = \"examtable\")\r\n        )\r\n    )\r\n)\r\n\r\n# Define server logic required\r\nserver <- function(input, output) {\r\n    output$distPlot <- renderPlot({\r\n        #unlist - data contains string\r\n        x <- unlist(exam[,input$variable])\r\n        \r\n        ggplot(exam, aes(x)) + \r\n            geom_histogram(bins = input$bin,\r\n                           color = \"black\",\r\n                           fill = \"light blue\")\r\n    })\r\n    \r\n    output$examtable <- DT::renderDataTable({\r\n        if (input$show_data){\r\n            DT::datatable(data = exam %>%\r\n                          select(1:7),\r\n                          options = list(pageLength = 10),\r\n                          rownames = FALSE)\r\n        }\r\n    })\r\n}\r\n\r\n# Run the application \r\nshinyApp(ui = ui, server = server)\r\n\r\n\r\n\r\nReference\r\nLesson 11: Getting to Know Shiny\r\n\r\n\r\n\r\n",
+    "preview": "posts/2021-07-17-know-shiny/preview_image.png",
+    "last_modified": "2021-07-22T11:45:30+08:00",
+    "input_file": {},
+    "preview_width": 1900,
+    "preview_height": 934
+  },
+  {
     "path": "posts/2021-07-11-text-vis-r/",
     "title": "Text Visual Analytics with R",
     "description": "This in-class exercise explores the concepts and methods of Text Visualisation. It visualises and analyses the text data from a collection of 20 newsgroups. It introduces the tidytext framework for processing, wrangling, analysing and visualising text data using tidytext, tidyverse, widyr, wordcloud, ggwordcloud, textplot, DT, lubridate, and hms packages.",
