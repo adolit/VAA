@@ -33,7 +33,7 @@ knitr::opts_chunk$set(fig.retina=3,
 
 The VAST Challenge 2021 is a rerun of the VAST Challenge 2014 with the same story line about the fictitious island country of Kronos, the company GASTech, and the incidents involving missing GAStech employees. However, the data for the VAST Challenge 2021 were modified and new questions were introduced.  
 
-Using the two weeks worth of data leading to the disappearance of the GAStech employees, the goal of Mini-Challenge 2 is to analyze the movement and tracking of company vehicles GPS data. Additionally, together with GAStech employee’s credit card transactions and Kronos Kares loyalty card data, the additional objectives are:
+Using the two weeks worth of data leading to the disappearance of the GAStech employees, the goal of Mini-Challenge 2 is to analyze the movement and tracking of company vehicles GPS data. Additionally, together with GAStech employee’s credit card transactions and Kronos Kares loyalty card data, the main objectives are:
 
 - Identify anomalies and suspicious behaviours
 
@@ -45,7 +45,7 @@ Using the two weeks worth of data leading to the disappearance of the GAStech em
 
 The 2021 data was compared against 2014 data using the _diffr_ package to better understand the variations of VAST Challenge 2021 from the previous year's challenge. 
 
-- _car-assignments.csv_ contains of vehicle assignments by employee. It lists the employee name, Car ID assignment, employee department, and employee job title.
+- _car-assignments.csv_ contains vehicle assignments by employee. It lists the employee name, Car ID assignment, employee department, and employee job title.
 
   + Based on the result of code chunk below, all employee names are the same. However, there are 8 employees with different car ID assignment and employee job title. For example, _Calixto,Nils_ was assigned to _CardID 1_ as _IT Helpdesk_ in 2021 challenge but was previously assigned to _CardID 8_ as _IT Technician_ in 2014 challenge.
 
@@ -125,39 +125,41 @@ Nevertheless, both challenges want to know about _unusual events_, _anomalies_, 
 
 ## 2.3 Visualisation Approaches
 
-By reviewing the submissions for [VAST Challenge 2014](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/), several approaches were identified to be relevant to the current VAST challenge and doable using R data visualisation and data analysis packages.
+By reviewing the submissions for [VAST Challenge 2014](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/), several approaches were identified to be relevant to the current VAST challenge and reproducible using R data visualisation and data analysis packages.
 
-Mini-Challenge 2 emphasizes the geospatial-temporal data analysis with the financial data from the credit card and loyalty transactions. The common approach from several submissions was to highlight roadway paths of the car and indicate the position and time relationship. The figure below from the [Peking University](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/entries/Peking%20University/), recipient of Excellent Comprehensive Visual Analysis System, shows an example geospatial-temporal visualisation.
+Mini-Challenge 2 emphasizes the geospatial-temporal data analysis with the financial data from the credit card and loyalty transactions. The common approach from several submissions was to highlight roadway paths of the car and indicate the position and time relationship. The figure below from the [Peking University](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/entries/Peking%20University/), recipient of Excellent Comprehensive Visual Analysis System Award, shows an example geospatial-temporal visualisation.
 
 ![](img/litreview_01_peking.png)
 
-This example of movement data visualisation can be done using using _sf_, _raster_, _readr_, _clock_ and _tmap_ packages. It can also be improved by having an interactive map and tooltip information.
+This example of movement data visualisation can be achieved using _sf_, _raster_, _readr_, _clock_ and _tmap_ packages. It can also be improved by having an interactive map and tooltip information.
 
+The heatmap visualisation below from [Central South University](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/entries/Central%20South%20University/), recipient of Outstanding Visualization and Analysis Award, shows the credit card transactions of general staff which can also be used to identify the most popular spots and when they are popular. 
+![](img/litreview_02_central_south.jpg){width=80%}
 
+This example of heatmap visualisation can be achieved using _gglot2_ and _plotly_ packages. It can also be improved by having an interactive tooltip information.
 
+The concept of 'Point of Interest' (POI) from [Virginia Tech](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/entries/Virginia%20Tech/), recipient of Effective Presentation Honorable Mention, shows the location with a diameter of 50 meters where an employee stops for more than 5 minutes. The POI concept can be utilized to correlate the gps tracking data, credit and debit card transactions, and loyalty card data to help in identifying the owners of the credit card and loyalty cards.
 
+![](img/litreview_03_virginia.jpg)
 
+This example of POI data visualisation can be achieved by reusing the geospatial-temporal packages.
 
-
-
-
-
-
-
-# 3. Exploration and Data Preparation
+# 3. Methodology
 
 ## 3.1 Install and Lauch R Packages
 
+The code chunk below is used to install and load the packages.
+
 ```{r r package}
 packages = c('ggiraph', 'plotly',
-             'sf', 'tmap', 
+             'raster','sf', 'tmap', 
              'igraph', 'tidygraph', 
              'ggraph', 'visNetwork', 
              'lubridate', 'clock',
              'widyr', 'wordcloud',
              'ggwordcloud', 'DT',
              'textplot', 'hms',
-             'tidyverse')
+             'timetk','tidyverse')
 
 for(p in packages){
   if(!require(p, character.only = T)){
@@ -166,36 +168,91 @@ for(p in packages){
   library(p, character.only = T)
 }
 ```
+Aside from the mentioned packages in the Literature Review, the following packages are also loaded:
 
-## Importing Data
+- _igraph, tidygraph, ggraph, visNetwork_ for creation of graph object data frames and building network graph visualisation
+
+- _timetk_ for the visualization, wrangling and feature engineering of time series data and to diagnose anomalies
+
+
+## 3.2 Import Data
+
+Using _read_csv()_ of readr package, import the csv files into R.
 
 ```{r}
-cc <- read_csv("data/aspatial/cc_data.csv")
-loyal <- read_csv("data/aspatial/loyalty_data.csv")
+car_data <- read_csv("data/aspatial/car-assignments.csv")
+cc_data <- read_csv("data/aspatial/cc_data.csv")
+loyalty_data <- read_csv("data/aspatial/loyalty_data.csv")
+gps_data <- read_csv("data/aspatial/gps.csv")
 
-head(cc)
-head(loyal)
+glimpse(car_data)
+glimpse(cc_data)
+glimpse(loyalty_data)
+glimpse(gps_data)
 ```
 
-# Exploratory Data Analysis
+Using an external open-source geographic information system (GIS) software _[QGIS](https://qgis.org/en/site/)_, produce a georeference tif file called **abila_map.tif** from the tourist map _MC2-Tourist.jpg_ and _Abila_ shapefiles.
 
-# Mini Challenge 2
+![](img/qgis_map.png)
 
-## Q1: Most Popular Locations based on Credit Card and Loyalty Data
+Using _raster()_ of Raster package, import _abila_map.tif_ into R.
 
-## Q2: Anomalies in Vehicle, Credit Card and Loyalty Card Data
+```{r}
+bgmap <- raster("data/Geospatial/abila_map.tif")
 
-## Q3: Owners of Credit Card and Loyalty Card
+tm_shape(bgmap) +
+tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255)
+```
 
-## Q4: Relationships among GASTech Personnel
+## 3.3 Prepare Data
 
-## Q5: Evidence of Suspicious Activities
+- _car_data_
 
-## Proposed Visual Analytics RShiny App
+There are several employees with the same last name and same first name.
+Create a new column _FullName_ and combine _FirstName_ and _LastName_ to have unique employee name identifier.
+Additionally, rename columns _CurrentEmploymentType_ to _Department_ and _CurrentEmploymentTitle_ to _Title_.
 
-# Conclusion
+```{r}
+car_data <- car_data %>%
+  mutate(FullName = paste(FirstName, LastName, sep = " ")) %>%
+  rename(Deparment = CurrentEmploymentType) %>%
+  rename(Title = CurrentEmploymentTitle)
+```
 
-## Reference:
+- _cc_data_
+
+_Katerina's Cafe'_ causes error when plotting a graph because of special characters.
+Convert the special characters into string format using _mutate_ and _str_detec_ functions.
+
+```{r}
+cc_data <- cc_data %>%
+    mutate(location = ifelse(str_detect(location, "Katerina"), "Katerina's Cafe", location))
+```
+
+
+## 3.4 Exploratory Data Analysis
+
+## 3.5 Proposed Solutions
+
+### Q1: Most Popular Locations based on Credit Card and Loyalty Data
+
+### Q2: Anomalies in Vehicle, Credit Card and Loyalty Card Data
+
+### Q3: Owners of Credit Card and Loyalty Card
+
+### Q4: Relationships among GASTech Personnel
+
+### Q5: Evidence of Suspicious Activities
+
+## 3.6 Proposed Visual Analytics RShiny App
+
+# 4. Analysis and Conclusion
+
+# 5. References
 
 * [ISSS608 Assignment Instructions](https://isss608.netlify.app/assignment.html)
 
