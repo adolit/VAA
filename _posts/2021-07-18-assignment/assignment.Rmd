@@ -1,14 +1,14 @@
 ---
 title: "Visual Detective Assignment"
 description: |
-  This assignment hopes to solve the 2021 IEEE Visual Analytics Science and Technology (VAST) Challenge: Mini-Challenge 2 by applying different visual analytics concepts, methods, and techniques with relevant R data visualisation and data analysis packages.
+  This assignment attempts to solve the 2021 IEEE Visual Analytics Science and Technology (VAST) Challenge: Mini-Challenge 2 by applying different visual analytics concepts, methods, and techniques with relevant R data visualisation and data analysis packages.
 
 preview: img/preview_image.png  
 author:
   - name: Archie Dolit
     url: https://www.linkedin.com/in/adolit/
     affiliation: School of Computing and Information Systems, Singapore Management University
-date: 07-18-2021
+date: 07-25-2021
 output:
   distill::distill_article:
     self_contained: false
@@ -33,7 +33,7 @@ knitr::opts_chunk$set(fig.retina=3,
 
 The VAST Challenge 2021 is a rerun of the VAST Challenge 2014 with the same story line about the fictitious island country of Kronos, the company GASTech, and the incidents involving missing GAStech employees. However, the data for the VAST Challenge 2021 were modified and new questions were introduced.  
 
-Using the two weeks worth of data leading to the disappearance of the GAStech employees, the goal of Mini-Challenge 2 is to analyze the movement and tracking of company vehicles GPS data. Additionally, together with GAStech employee’s credit card transactions and Kronos Kares loyalty card data, the main objectives are:
+Using the two weeks worth of data leading to the disappearance of the GAStech employees, the goal of [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) is to analyze the movement and tracking of company vehicles GPS data. Additionally, together with GAStech employee’s credit card transactions and Kronos Kares loyalty card data, the main objectives are:
 
 - Identify anomalies and suspicious behaviours
 
@@ -45,7 +45,7 @@ Using the two weeks worth of data leading to the disappearance of the GAStech em
 
 The 2021 data was compared against 2014 data using the _diffr_ package to better understand the variations of VAST Challenge 2021 from the previous year's challenge. 
 
-- _car-assignments.csv_ contains vehicle assignments by employee. It lists the employee name, Car ID assignment, employee department, and employee job title.
+- **_car-assignments.csv_** contains vehicle assignments by employee. It lists the employee name, Car ID assignment, employee department, and employee job title.
 
   + Based on the result of code chunk below, all employee names are the same. However, there are 8 employees with different car ID assignment and employee job title. For example, _Calixto,Nils_ was assigned to _CardID 1_ as _IT Helpdesk_ in 2021 challenge but was previously assigned to _CardID 8_ as _IT Technician_ in 2014 challenge.
 
@@ -55,7 +55,7 @@ diffr("data/aspatial/car-assignments.csv", "data_2014/aspatial/car-assignments.c
 ```
 ![](img/diff_car.png)
 
-- _loyalty_data.csv_ contains the loyalty card transaction data. It lists the date of the transaction, name of the business, price, and the unique 5-character code loyalty number.
+- **_loyalty_data.csv_** contains the loyalty card transaction data. It lists the date of the transaction, name of the business, price, and the unique 5-character code loyalty number.
 
   + The major difference in VAST Challenge 2021 is that loyalty number was used instead of employee names. Other minor differences are the date format ( _line:2_ **0**1/**0**6/2014 vs 1/6/2014) and price of transaction ( example: _line:1145_ Hippokampos,**14.89** vs. Hippokampos,**17.66**).
 
@@ -64,7 +64,7 @@ diffr("data/aspatial/loyalty_data.csv", "data_2014/aspatial/loyalty_data.csv")
 ```
 ![](img/diff_loyalty.png)
 
-- _cc_data.csv_ contains the credit and debit card transaction data. It lists the date and time of the transaction, name of the business, price, and last 4 digits of the credit or debit card number.
+- **_cc_data.csv_** contains the credit and debit card transaction data. It lists the date and time of the transaction, name of the business, price, and last 4 digits of the credit or debit card number.
 
   + Similar to the loyalty data, the major difference in that last 4 digits was used instead of employee names. Other minor differences are the date and time format ( _line:2_ **0**1/**0**6/2014 07:28 vs 1/6/2014 7:28) as well as the time and price of transaction ( example: _line:701_ 01/12/2014 **13:17**,Ouzeri Elian,**98.45**  vs. 1/12/2014 **13:03**,Ouzeri Elian,**38.5**).
 
@@ -75,15 +75,15 @@ diffr("data/aspatial/cc_data.csv", "data_2014/aspatial/cc_data.csv")
 
 ![](img/diff_cc.png){width=80%}
 
-- _gps.csv_ contains the vehicle tracking data. It lists the date and time, car ID, latitude, and longitude coordinates with *685,170* entries. 
+- **_gps.csv_** contains the vehicle tracking data. It lists the date and time, car ID, latitude, and longitude coordinates with *685,170* entries. 
 
-  + The file size is too large and it is not practical to do a line by line comparison. Instead of using the _diffr_ , the _md5sum_ was used to compute the MD5 hashes and detect if there are differences between the 2 files. Based on the result of code chunk below, there are no differences between the 2021 and 2014 gps.csv file.
+  + The file size is too large and it is not practical to do a line by line comparison. Instead of using the _diffr_ , the _md5sum_  from _tools_ package was used to compute the MD5 hashes and detect if there are differences between the 2 files. Based on the result of code chunk below, there are no differences between the 2021 and 2014 gps.csv file.
 
 ```{r diff gps}
 library(tools)
 md5sum("data/aspatial/gps.csv") == md5sum("data_2014/aspatial/gps.csv")
 ```
-- _MC2-Tourist.jpg_ is the tourist map of Abila, the Capital city of Kronos, with identified location of interest. 
+- **_MC2-Tourist.jpg_** is the tourist map of Abila, the Capital city of Kronos, with identified location of interest. 
 
   + Based on visual inspection and _md5sum_ code chunk below, there are no differences between the 2021 and 2014 tourist map.
   
@@ -94,7 +94,7 @@ md5sum("data/aspatial/gps.csv") == md5sum("data_2014/aspatial/gps.csv")
 ```{r diff map}
 md5sum("data/aspatial/MC2-tourist.jpg") == md5sum("data_2014/aspatial/MC2-tourist.jpg")
 ```
-- _ESRI shapefiles_ of Abila and Kronos contains the geospatial vector data format for storing geometric location and associated attribute information.
+- **_ESRI shapefiles_** of Abila and Kronos contains the geospatial vector data format for storing geometric location and associated attribute information.
 
   + Based on the _md5sum_ code chunk below, there are also no differences between the 2021 and 2014 shapefiles.
 
@@ -177,9 +177,9 @@ Aside from the mentioned packages in the Literature Review, the following packag
 
 ## 3.2 Import Data
 
-Using _read_csv()_ of readr package, import the csv files into R.
+Import the csv files into R using _read_csv()_ of _readr_ package.
 
-```{r}
+```{r import csv}
 car_data <- read_csv("data/aspatial/car-assignments.csv")
 cc_data <- read_csv("data/aspatial/cc_data.csv")
 loyalty_data <- read_csv("data/aspatial/loyalty_data.csv")
@@ -191,13 +191,13 @@ glimpse(loyalty_data)
 glimpse(gps_data)
 ```
 
-Using an external open-source geographic information system (GIS) software _[QGIS](https://qgis.org/en/site/)_, produce a georeference tif file called **abila_map.tif** from the tourist map _MC2-Tourist.jpg_ and _Abila_ shapefiles.
+Produce a georeference tif file called **abila_map.tif** from the tourist map _MC2-Tourist.jpg_ and _Abila_ shapefiles using an external open-source geographic information system (GIS) software _[QGIS](https://qgis.org/en/site/)_.
 
 ![](img/qgis_map.png)
 
-Using _raster()_ of Raster package, import _abila_map.tif_ into R.
+Import _abila_map.tif_ into R using _raster()_ of Raster package, 
 
-```{r}
+```{r bgmap}
 bgmap <- raster("data/Geospatial/abila_map.tif")
 
 tm_shape(bgmap) +
@@ -210,45 +210,229 @@ tm_rgb(bgmap, r = 1,g = 2,b = 3,
 
 ## 3.3 Prepare Data
 
-- _car_data_
+- **_car_data_**
 
 There are several employees with the same last name and same first name.
-Create a new column _FullName_ and combine _FirstName_ and _LastName_ to have unique employee name identifier.
-Additionally, rename columns _CurrentEmploymentType_ to _Department_ and _CurrentEmploymentTitle_ to _Title_.
+Create a new column _FullName_ and combine _FirstName_ and _LastName_ to have unique employee name identifier using _mutate()_ of _dplyr_ package.
 
-```{r}
+Additionally, rename columns _CurrentEmploymentType_ to _Department_ and _CurrentEmploymentTitle_ to _Title_  using _rename()_. Finally, convert _carID_ field from numerical to factor data type.
+
+```{r prep car}
 car_data <- car_data %>%
+  #concatenate first and last name
   mutate(FullName = paste(FirstName, LastName, sep = " ")) %>%
   rename(Deparment = CurrentEmploymentType) %>%
   rename(Title = CurrentEmploymentTitle)
+
+car_data$CarID <- as_factor(car_data$CarID)
+
+glimpse(car_data)
 ```
 
-- _cc_data_
+- **_cc_data_**
 
 _Katerina's Cafe'_ causes error when plotting a graph because of special characters.
-Convert the special characters into string format using _mutate_ and _str_detec_ functions.
+Convert the special characters into string format using _mutate()_ and _str_detec()_ functions.
 
-```{r}
+Additionally, convert the _timestamp()_ from character datatype to date-time format using _data-time_parse()_ of _clock_ package, then get the date, day of the week, and hour of transaction.
+
+```{r prep cc}
+
+#detect and replace Katerina to Katerina's Cafe
 cc_data <- cc_data %>%
     mutate(location = ifelse(str_detect(location, "Katerina"), "Katerina's Cafe", location))
+
+#convert to date-time format
+cc_data$date <- date_time_parse(cc_data$timestamp,
+                zone = "",
+                format = "%m/%d/%Y")
+cc_data$day <- wday(cc_data$date,
+                          label = TRUE,
+                          abbr = TRUE)
+
+cc_data$timestamp <- date_time_parse(cc_data$timestamp,
+                zone = "",
+                format = "%m/%d/%Y %H:%M")
+
+cc_data$hour <- get_hour(cc_data$timestamp)
+
+glimpse(cc_data)
 ```
 
+- **_loyalty_data_**
 
-## 3.4 Exploratory Data Analysis
+Similar to _cc_data_, convert the special characters of _Katerina's Cafe'_ into string format, convert the _timestamp_ from character datatype to date-time format, then get the date and day of the week of transaction. Note that _loyalty_data_ does not include the hour and minutes of the transaction.
+
+```{r prep loyal}
+
+#detect and replace Katerina to Katerina's Cafe
+loyalty_data <- loyalty_data %>%
+    mutate(location = ifelse(str_detect(location, "Katerina"), "Katerina's Cafe", location))
+
+#convert to date-time format
+loyalty_data$date <- date_time_parse(loyalty_data$timestamp,
+                zone = "",
+                format = "%m/%d/%Y")
+
+loyalty_data$timestamp <- date_time_parse(loyalty_data$timestamp,
+                zone = "",
+                format = "%m/%d/%Y")
+
+loyalty_data$day <- wday(loyalty_data$timestamp,
+                          label = TRUE,
+                          abbr = TRUE)
+
+glimpse(loyalty_data)
+```
+
+- **_gps_data_**
+
+Rename _Timestamp_ to _timestamp_ and _id_ to _CarID_ so it will be consistent with other data frame. 
+Similar to  _cc_data_ and _loyalty_data_, convert the _timestamp_ from character datatype to date-time format using _data-time_parse()_, then get the date and day of the week.
+
+Convert _CarID_ field from numerical to factor data type. Lastly, convert the gps data frame into a simple feature data frame using _st_as_sf()_ of _sf_ package.
+
+```{r prep gps}
+
+#rename columns for consistency
+gps_data <- gps_data %>%
+  rename(timestamp = Timestamp) %>%
+  rename(CarID = id)
+
+#convert to date-time format
+gps_data$date <- date_time_parse(gps_data$timestamp,
+                zone = "",
+                format = "%m/%d/%Y")
+
+gps_data$day <- as.factor(wday(gps_data$date,
+                          label = TRUE,
+                          abbr = TRUE))
+
+gps_data$timestamp <- date_time_parse(gps_data$timestamp,
+                zone = "",
+                format = "%m/%d/%Y %H:%M:%S")
+
+gps_data$hour <- get_hour(gps_data$timestamp)
+
+#convert to factor data type
+gps_data$CarID <- as_factor(gps_data$CarID)
+
+
+glimpse(gps_data)
+
+#convert to simple feature 
+gps_sf <- st_as_sf(gps_data, 
+                   coords = c("long", "lat"),
+                       crs= 4326)
+gps_sf
+```
+
+## 3.4 Join Data
+
+- **_financial data_**
+
+Combine the _cc_data_ and _loyalty_data_ based on the purchase information like the location, date and price of transaction using _full_join()_ of _dplyr_ package. 
+Exclude _day_ and _timestamp_ from _loyalty_data_ since these fields are redundant with _cc_data_. 
+Rearrange the columns into _timestamp, date, day, hour, location, price, last4ccnum, loyaltynum_.
+
+```{r join cc_loyal}
+
+#combine based on date, location, price, exclude day and timestamp
+cc_loyalty_data <- full_join(cc_data %>% select(-c("day")),
+                             loyalty_data %>% select(-c("day","timestamp")), 
+                             by = c("date" = "date", 
+                                    "location" = "location", 
+                                    "price" = "price"))
+
+#get day of the joint data
+cc_loyalty_data$day <- wday(cc_loyalty_data$date,
+                          label = TRUE,
+                          abbr = TRUE)
+
+#rearrange columns
+cc_loyalty_data <- cc_loyalty_data %>%
+  select("timestamp", "date", "day", "hour", "location", "price", "last4ccnum", "loyaltynum")
+
+glimpse(cc_loyalty_data)
+```
+The joint financial data reveals 1,807 entries. Some entries have _last4ccnum_ but without _loyaltynum_, have _loyaltynum_ but without _last4ccnum_. 
+Additionally, _last4ccnum_ does not necessarily correpond to only 1 _loyaltynum_ which means the owner may use multiple credit or debit cards for their loyalty card or vice versa.
+
+- **_geospatial data_**
+
+Combine the _car_data_ and _gps_data_ based _CarID_ using _left_join()_ of _dplyr_ package. 
+Exclude _FirstName_ and _LastName_ from _car_data_ since these fields are redundant with _FullName_. 
+
+```{r join car_gps}
+
+#combine based on CarID
+car_gps_data <- left_join(gps_data, 
+                          car_data %>% select(-c("FirstName", "LastName")),
+                          by = "CarID")
+
+glimpse(car_gps_data)
+
+car_gps_sf <- left_join(gps_sf,
+                        car_data %>% select(-c("FirstName", "LastName")),
+                        by = "CarID")
+
+car_gps_sf
+```
+The joint geospatial data reveals that some _CarID_ cannot be mapped to specific employees. Most probably these are the truck drivers who have no specific car assignment.
 
 ## 3.5 Proposed Solutions
 
-### Q1: Most Popular Locations based on Credit Card and Loyalty Data
+### Q1: Most Popular Locations
+
+**Using just the credit and loyalty card data, identify the most popular locations, and when they are popular. What anomalies do you see? What corrections would you recommend to correct these anomalies?**
+
+Generate an interactive bar graph in descending order using _ggplot_ and _plotly_ to determine the most popular locations.
+
+Based on the combined combined credit card and loyalty data, the most popular location is _Katerina's Cafe_ with a total transaction of 256, followed by _Hippokampos_ with 213 transactions and _Guy's Gyro_ with 187 transactions.
+
+```{r q1 popular, fig.height=8}
+popular_combine <- cc_loyalty_data %>%
+  group_by(location) %>%
+  summarize(total_count=n()) %>%
+  ggplot(aes(x=reorder(location, total_count),
+             y=total_count,
+             text = paste("Location :", location,
+                          "\n",
+                          "Number of transactions:", total_count))) +
+  geom_bar(stat="identity", fill = "blue") +
+  ggtitle("Combined Credit Card & Loyalty Transactions") +
+  labs(x = "Locations", y = "Transaction Count") + 
+  coord_flip() +
+  theme_minimal()
+
+ggplotly(popular_combine, tooltip = "text")
+```
+
+
 
 ### Q2: Anomalies in Vehicle, Credit Card and Loyalty Card Data
 
+**Add the vehicle data to your analysis of the credit and loyalty card data. How does your assessment of the anomalies in question 1 change based on this new data? What discrepancies between vehicle, credit, and loyalty card data do you find?**
+
+
+
 ### Q3: Owners of Credit Card and Loyalty Card
+
+**Can you infer the owners of each credit card and loyalty card? What is your evidence? Where are there uncertainties in your method? Where are there uncertainties in the data?**
+
+
 
 ### Q4: Relationships among GASTech Personnel
 
+**Given the data sources provided, identify potential informal or unofficial relationships among GASTech personnel. Provide evidence for these relationships.**
+
+
+
 ### Q5: Evidence of Suspicious Activities
 
-## 3.6 Proposed Visual Analytics RShiny App
+**Do you see evidence of suspicious activity? Identify 1- 10 locations where you believe the suspicious activity is occurring, and why.**
+
+
 
 # 4. Analysis and Conclusion
 
