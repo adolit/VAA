@@ -672,18 +672,43 @@ As for most cases, the POI map may show certain points around the vicinity of th
 
 The owner of the loyalty card will be known after the credit card owner has been identified. 
 As noted earlier, there is no one-to-one correspondence between the credit and loyalty card. 
-A network map can be used to visualize the number of transactions between specific credit card and loyalty card to know the highest likelihood of the loyalty card owner.
+A heatmap can be used to visualize the number of transactions between specific credit card and loyalty card to know the highest likelihood of the loyalty card owner.
+
+```{r count cc loyal,fig.height=8}
+cc_loyal_count <- cc_loyalty_data %>%
+  group_by(last4ccnum,loyaltynum) %>%
+  summarise(count=n())
+  
+cc_loyal_correlate <- ggplot(data = cc_loyal_count,
+                               aes(x=loyaltynum, y=as.factor(last4ccnum),
+                                   fill = count,
+                                   text = paste("Last 4 Credit Card Number :", last4ccnum,"\n",
+                                                "Loyalty Card Number:", loyaltynum,"\n",
+                                                "Number of transactions :", count))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
+  ggtitle("Correlation of Credit Card & Loyalty Card by Number of Transactions") +
+  labs(x = "Loyalty Card Number",y = "Credit Card Number") + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 90))
+
+ggplotly(cc_loyal_correlate, tooltip = "text")
+```
+
+From the heatmap, it can seen that certain combination of credit card number and loyalty card are most often used together.
+Example of which are 6901 and L9363 with 28 transactions; 7117 and L6417 also with 28 transactions.
+Nevertheless, even for credit card 6901, there are still 9 transactions where loyalty card was not used.
+Similarly, credit card 7117 has 3 transactions where loyalty card was not used.
 
 ### Q4: Relationships among GASTech Personnel
 
 **Given the data sources provided, identify potential informal or unofficial relationships among GASTech personnel. Provide evidence for these relationships.**
 
 Similar to question 3, identify the POIs by computing the difference of gps timestamp. 
-Afterwards, identity who are within 'close contact' of each employee based difference of their gps coordinates within the same time period.
-This can help establish the relationship of GASTech personnel based on who are their meetings at the same place and at the same time.
+Afterwards, identify who are within 'close contact' of each employee based on the difference of their gps coordinates within the same time period.
+This can help establish the relationship of GASTech personnel according to their meetings at the same place and at the same time.
 
 ```{r q4 poi network}
-
 gps_poi_network <- car_gps_data %>%
   group_by(CarID) %>%
   mutate(poi_diff = timestamp - lag(timestamp, order_by=CarID)) %>%
@@ -699,7 +724,8 @@ gps_poi_network <- car_gps_data %>%
 glimpse(gps_poi_network)
 ```
 
-```{r q4 poi network}
+
+```{r q4 poi network diagram}
 
  employee_edges <- gps_poi_network %>%
   group_by(date, hour)%>%
@@ -725,38 +751,95 @@ glimpse(gps_poi_network)
              nodesIdSelection = TRUE) %>%
    visLegend() %>%
    visLayout(randomSeed = 123)
-
-
 ```
-From the  network diagram, it can be seen that _Isande Barrasca_ , a Drill Technician from the Engineering Deparment is an outlier.
-His only close contact to the rest of employees is _Hideki Cocinaro_ , a Site Controller from the Security Deparment.
 
+From the  network diagram, it can be seen that _Isande Barrasca_ , a Drill Technician from the Engineering Department is an outlier.
+His only close contact to the rest of employees is _Hideki Cocinaro_ , a Site Controller from the Security Department.
 
-```{r q4 network}
-na_loyaltynum  <- ggplot(data = missing_loyaltynum,
-                         aes(x=date, y=reorder(location, desc(location)),
-                                   fill = price,
-                                   text = paste("Location :", location,"\n",
-                                                "Date:", timestamp,"\n",
-                                                "Total Amount of Transaction:", price))) +
+```{r q4 employee interaction, fig.height=8}
+employee_interact1 <- full_join(employee_edges, 
+                             employee_nodes, 
+                             by = (c("from" = "id"))) %>%
+  rename(SenderDepartment = group) %>%
+  rename(SenderTitle = Title)
+
+employee_interact2 <- full_join(employee_interact1, 
+                             employee_nodes, 
+                             by = (c("to" = "id"))) %>%
+  rename(ReceiverDepartment = group) %>%
+  rename(ReceiverTitle = Title) %>%
+  rename(Sender = from) %>%
+  rename(Receiver = to)
+
+employee_interaction  <- ggplot(data = employee_interact2,
+                         aes(x=Sender, y=Receiver,
+                                   fill = weight,
+                                   text = paste("Sender :", Sender,"\n",
+                                                "Sender Department:", SenderDepartment, "\n",
+                                                "Sender Title:", SenderTitle, "\n",
+                                                "\n",
+                                                "Receiver", Receiver,"\n",
+                                                "Receiver Department:", ReceiverDepartment, "\n",
+                                                "Receiver Title:", ReceiverTitle, "\n",
+                                                "\n",
+                                                "Number of Meetings", weight))) +
   geom_tile()+
   scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
-  ggtitle("Transactions with Missing Loyalty Data by Date") +
-  labs(x = "Date of Transaction", y = "Locations") +
-  theme_minimal()
-
-ggplotly(na_loyaltynum, tooltip = "text")
+  ggtitle("GAStech Personnel Relationship based on number of Interactions") +
+  labs(x = "Sender Employee", y = "Receiver Employee") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 90))
+  
+ggplotly(employee_interaction, tooltip = "text")
 ```
 
+The highest number of meetings among GAStech Personnel are truck drivers with 23 interactions. Employee names are set to NA since the CarID is not identified.
+The second highest number of meetings is from _Bertrand Ovan_, Group Manager of Facilities department with 14 meetings. 
+The third highest number of meetings is from _Ingrid Barranco_, SVP/CFO from Executive department with 12 meetings.
 
-_Combined Credit Card & Loyalty Transactions by Hour of Day_ heatmap of Question 1, the earliest transaction is around 3:00 AM from Kronos Mart while the last transaction is 10:00
 
 ### Q5: Evidence of Suspicious Activities
 
 **Do you see evidence of suspicious activity? Identify 1- 10 locations where you believe the suspicious activity is occurring, and why.**
 
+Building on the POI network with employee interactions from Question 4, covert the gps coordinates to simple feature
 
-# 4. References
+```{r q5 poi gps}
+
+gps_poi_network_sf <- st_as_sf(gps_poi_network,
+                               coords = c("long", "lat"),
+                               crs= 4326)
+gps_poi_network_sf
+```
+
+```{r q5 poi map}
+gps_poi_network_points <- gps_poi_network_sf %>%
+  select(timestamp,
+         CarID,
+         Deparment,
+         Title,
+         FullName,
+         date,
+         hour)
+
+tmap_mode("view")
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_poi_network_points) +
+  tm_dots(col = 'red', border.col = 'black', size = 1, alpha = 0.5, jitter = .8) +
+  tm_facets(by = "date", ncol = 1)
+```
+
+
+
+
+# 4. Conclusion
+
+# 5. References
 
 * [ISSS608 Assignment Instructions](https://isss608.netlify.app/assignment.html)
 
