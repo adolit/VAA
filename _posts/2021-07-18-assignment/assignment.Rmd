@@ -680,7 +680,7 @@ A network map can be used to visualize the number of transactions between specif
 
 Similar to question 3, identify the POIs by computing the difference of gps timestamp. 
 Afterwards, identity who are within 'close contact' of each employee based difference of their gps coordinates within the same time period.
-This can help establish the relationship of GASTech personnel based on who are their meeting at the same place and at the same time.
+This can help establish the relationship of GASTech personnel based on who are their meetings at the same place and at the same time.
 
 ```{r q4 poi network}
 
@@ -699,18 +699,64 @@ gps_poi_network <- car_gps_data %>%
 glimpse(gps_poi_network)
 ```
 
+```{r q4 poi network}
+
+ employee_edges <- gps_poi_network %>%
+  group_by(date, hour)%>%
+  mutate(from = FullName) %>%
+  mutate(to = lead(FullName, order_by = timestamp)) %>%
+  ungroup() %>%
+  group_by(from,to) %>%
+  summarise(weight = n())
+
+ employee_nodes <- gps_poi_network %>%
+   select(FullName, Deparment, Title) %>%
+   rename(id = FullName) %>%
+   rename(group = Deparment) %>%
+   distinct()
+ 
+ visNetwork(employee_nodes,
+            employee_edges) %>%
+   visIgraphLayout(layout = "layout_with_fr") %>%
+   visEdges(arrows = "to", 
+            smooth = list(enabled = TRUE, 
+                          type = "curvedCW")) %>%
+   visOptions(highlightNearest = TRUE,
+             nodesIdSelection = TRUE) %>%
+   visLegend() %>%
+   visLayout(randomSeed = 123)
 
 
+```
+From the  network diagram, it can be seen that _Isande Barrasca_ , a Drill Technician from the Engineering Deparment is an outlier.
+His only close contact to the rest of employees is _Hideki Cocinaro_ , a Site Controller from the Security Deparment.
+
+
+```{r q4 network}
+na_loyaltynum  <- ggplot(data = missing_loyaltynum,
+                         aes(x=date, y=reorder(location, desc(location)),
+                                   fill = price,
+                                   text = paste("Location :", location,"\n",
+                                                "Date:", timestamp,"\n",
+                                                "Total Amount of Transaction:", price))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
+  ggtitle("Transactions with Missing Loyalty Data by Date") +
+  labs(x = "Date of Transaction", y = "Locations") +
+  theme_minimal()
+
+ggplotly(na_loyaltynum, tooltip = "text")
+```
+
+
+_Combined Credit Card & Loyalty Transactions by Hour of Day_ heatmap of Question 1, the earliest transaction is around 3:00 AM from Kronos Mart while the last transaction is 10:00
 
 ### Q5: Evidence of Suspicious Activities
 
 **Do you see evidence of suspicious activity? Identify 1- 10 locations where you believe the suspicious activity is occurring, and why.**
 
 
-
-# 4. Analysis and Conclusion
-
-# 5. References
+# 4. References
 
 * [ISSS608 Assignment Instructions](https://isss608.netlify.app/assignment.html)
 
