@@ -7,18 +7,18 @@
     <description>Visual Analytics and Applications
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 18 Jul 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 24 Jul 2021 00:00:00 +0000</lastBuildDate>
     <item>
       <title>Visual Detective Assignment</title>
       <dc:creator>Archie Dolit</dc:creator>
       <link>https://adolit-vaa.netlify.app/posts/2021-07-18-assignment</link>
-      <description>VAST Challenge 2021: Mini-Challenge 2</description>
+      <description>This assignment attempts to solve the 2021 IEEE Visual Analytics Science and Technology (VAST) Challenge: Mini-Challenge 2 by applying different visual analytics concepts, methods, and techniques with relevant R data visualisation and data analysis packages.</description>
       <category>Visual Detective</category>
       <category>R</category>
       <category>Assignment</category>
       <guid>https://adolit-vaa.netlify.app/posts/2021-07-18-assignment</guid>
-      <pubDate>Sun, 18 Jul 2021 00:00:00 +0000</pubDate>
-      <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-18-assignment/preview_image.png" medium="image" type="image/png" width="1872" height="1152"/>
+      <pubDate>Sat, 24 Jul 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://adolit-vaa.netlify.app/posts/2021-07-18-assignment/img/preview_image.png" medium="image" type="image/png" width="1792" height="1098"/>
     </item>
     <item>
       <title>Getting to Know Shiny</title>

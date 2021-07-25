@@ -33,7 +33,7 @@ knitr::opts_chunk$set(fig.retina=3,
 
 The VAST Challenge 2021 is a rerun of the VAST Challenge 2014 with the same story line about the fictitious island country of Kronos, the company GASTech, and the incidents involving missing GAStech employees. However, the data for the VAST Challenge 2021 were modified and new questions were introduced.  
 
-Using the two weeks worth of data leading to the disappearance of the GAStech employees, the goal of [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) is to analyze the movement and tracking of company vehicles GPS data. Additionally, together with GAStech employee’s credit card transactions and Kronos Kares loyalty card data, the main objectives are:
+Using the two weeks worth of data leading to the disappearance of the GAStech employees, the goal of [Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html) is to analyze the movement and tracking of company vehicles GPS data. Together with GAStech employee’s credit card transactions and Kronos Kares loyalty card data, the main objectives are:
 
 - Identify anomalies and suspicious behaviours
 
@@ -98,7 +98,7 @@ md5sum("data/aspatial/MC2-tourist.jpg") == md5sum("data_2014/aspatial/MC2-touris
 
   + Based on the _md5sum_ code chunk below, there are also no differences between the 2021 and 2014 shapefiles.
 
-```{r diff shapefiles}
+```{r diff shapefiles, eval = FALSE}
 md5sum("data/Geospatial/Abila.dbf") == md5sum("data_2014/Geospatial/Abila.dbf")
 md5sum("data/Geospatial/Abila.kml") == md5sum("data_2014/Geospatial/Abila.kml")
 md5sum("data/Geospatial/Abila.prj") == md5sum("data_2014/Geospatial/Abila.prj")
@@ -151,7 +151,7 @@ This example of POI data visualisation can be achieved by reusing the geospatial
 The code chunk below is used to install and load the packages.
 
 ```{r r package}
-packages = c('ggiraph', 'plotly',
+packages = c('ggiraph', 'plotly','lobstr',
              'raster','sf', 'tmap', 
              'igraph', 'tidygraph', 
              'ggraph', 'visNetwork', 
@@ -168,12 +168,6 @@ for(p in packages){
   library(p, character.only = T)
 }
 ```
-Aside from the mentioned packages in the Literature Review, the following packages are also loaded:
-
-- _igraph, tidygraph, ggraph, visNetwork_ for creation of graph object data frames and building network graph visualisation
-
-- _timetk_ for the visualization, wrangling and feature engineering of time series data and to diagnose anomalies
-
 
 ## 3.2 Import Data
 
@@ -388,18 +382,15 @@ The joint geospatial data reveals that some _CarID_ cannot be mapped to specific
 
 Generate an interactive bar graph in descending order using _ggplot_ and _plotly_ to determine the most popular locations.
 
-Based on the combined combined credit card and loyalty data, the most popular location is _Katerina's Cafe_ with a total transaction of 256, followed by _Hippokampos_ with 213 transactions and _Guy's Gyro_ with 187 transactions.
-
 ```{r q1 popular, fig.height=8}
 popular_combine <- cc_loyalty_data %>%
   group_by(location) %>%
   summarize(total_count=n()) %>%
   ggplot(aes(x=reorder(location, total_count),
              y=total_count,
-             text = paste("Location :", location,
-                          "\n",
+             text = paste("Location :", location,"\n",
                           "Number of transactions:", total_count))) +
-  geom_bar(stat="identity", fill = "blue") +
+  geom_bar(stat="identity", fill = "royalblue4") +
   ggtitle("Combined Credit Card & Loyalty Transactions") +
   labs(x = "Locations", y = "Transaction Count") + 
   coord_flip() +
@@ -407,24 +398,307 @@ popular_combine <- cc_loyalty_data %>%
 
 ggplotly(popular_combine, tooltip = "text")
 ```
+Based on the combined combined credit card and loyalty data, the most popular location is _Katerina's Cafe_ with a total of 256 transactions, followed by _Hippokampos_ with 213 transactions and _Guy's Gyro_ with 187 transactions.
 
+
+Generate an interactive heatmap using _ggplot_ and _plotly_ to determine the date and time when employees visit the locations.
+
+```{r q1 popular date, fig.height=8}
+day_location_count <- cc_loyalty_data %>%
+  count(location, day) %>%
+  rename(count = n)
+
+popular_day_location <- ggplot(data = day_location_count,
+                               aes(x=day, y=reorder(location, desc(location)),
+                                   fill = count,
+                                   text = paste("Location :", location,"\n",
+                                                "Day of week:", day,"\n",
+                                                "Number of transactions :", count))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
+  ggtitle("Combined Credit Card & Loyalty Transactions by Day") +
+  labs(x = "Day of the Week",y = "Locations") + 
+  theme_minimal()
+
+ggplotly(popular_day_location, tooltip = "text")
+```
+Based on the combined combined credit card and loyalty data, _Brew've Been Served_ is popular on weekdays, Monday to Friday, with no transactions on weekend.
+_Guy's Gyro, Hippokampos, and Katerina's Cafe_ are very popular throughout the week.
+
+
+```{r q1 popular time, fig.height=8}
+hour_location_count <- cc_loyalty_data %>%
+  count(location, hour) %>%
+  rename(count = n)
+  
+popular_hour_location <- ggplot(data = hour_location_count,
+                               aes(x=hour, y=reorder(location, desc(location)),
+                                   fill = count,
+                                   text = paste("Location :", location,"\n",
+                                                "Hour of the Day:", hour,"\n",
+                                                "Number of transactions :", count))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
+  ggtitle("Combined Credit Card & Loyalty Transactions by Hour of Day") +
+  labs(x = "Hour of the Day",y = "Locations") + 
+  theme_minimal()
+
+ggplotly(popular_hour_location, tooltip = "text")
+```
+
+Based on the time of transaction, _Brew've Been Served and Hallowed Grounds_ are popular in the morning around 7AM and 8AM.
+
+_Abila Zacharo, Bean There Done That, Brewed Awakenings, Gelatogalore, Guy's Gyro, Hippokampos, Jack's Magical Beans, Kalami Kafenion, Katerina's Kafe, and Ouzera Elian_ are popular during lunch break around 12NN to 1PM.
+
+_Guy's Gyro, Hippokampos, and  Katerina's Kafe_ are popular during dinner around 7PM and 8PM.
+
+
+Generate an interactive boxplot using _plotly_ to determine the outliers and provide clues on some anomalies.
+
+```{r q1 outlier,  fig.height=8}
+outlier <- plot_ly(data = cc_loyalty_data,
+                   x = ~price,
+                   color = I("royalblue4"),
+                   alpha = 0.5,
+                   boxpoints = "suspectedoutliers") %>%
+  add_boxplot(y = ~reorder(location, desc(location))) %>%
+  layout(title = "Combined Credit Card & Loyalty Transactions Outliers",
+         yaxis = list(title = "Locations"),
+         xaxis = list(title = "Price"))
+
+outlier
+```
+
+Based on the price of transaction, it seems that there is unusual expensive purchase at _Frydos Autosupply n More_ amount to *10K*.
+This is highly suspicious since the mean price for this location is only 161.96.
+
+
+Generate an interactive linegraph using _plot_anomaly_diagnostics()_ of _plotly_ to diagnose anomalous points in the _cc_data_ purchase prices.
+Note that only locations with sufficient number of observations were selected for the anomaly diagnostics.
+
+```{r q1 anomaly,  fig.height=8}
+
+cc_data %>%
+  filter(location %in% c("Abila Airport",
+                         "Albert's Fine Clothing",
+                         "Carlyle Chemical Inc.",
+                         "Chostus Hotel",
+                         "Frydos Autosupply n' More",
+                         "Gelatogalore",
+                         "Nationwide Refinery",
+                         "Stewart and Sons Fabrication")) %>%
+  group_by(location) %>%
+  plot_anomaly_diagnostics(timestamp, price, 
+                           .facet_ncol = 2,
+                           .y_lab = "Price")
+```
+Based on the anomaly diagnostics, there are unusual purchases in _Gelatogalore, Frydos Autosupply n' More, Albert's Fine Clothing, and Chostus Hotel_.
+Again, the most expensive purchase is from _Frydos Autosupply n More_ amounting to **10,000 on 2014-01-13 19:20:00**.
+
+The anomalies will not be removed or corrected. It will be kept in the data as it is since it may lead to more clues in solving the challenge.
 
 
 ### Q2: Anomalies in Vehicle, Credit Card and Loyalty Card Data
 
 **Add the vehicle data to your analysis of the credit and loyalty card data. How does your assessment of the anomalies in question 1 change based on this new data? What discrepancies between vehicle, credit, and loyalty card data do you find?**
 
+Generate an interactive heatmap using _ggplot_ and _plotly_ based on the amount of transactions with missing _last4ccnum_.
+
+```{r q2 missing last4ccnum, fig.height=8}
+
+missing_last4ccnum <- cc_loyalty_data %>%
+   filter(is.na(last4ccnum)) 
+
+na_last4ccnum  <- ggplot(data = missing_last4ccnum,
+                         aes(x=date, y=reorder(location, desc(location)),
+                                   fill = price,
+                                   text = paste("Location :", location,"\n",
+                                                "Date:", date,"\n",
+                                                "Total Amount of Transaction:", price))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
+  ggtitle("Transactions with Missing Credit Card Data by Date") +
+  labs(x = "Date of Transaction", y = "Locations") +
+  theme_minimal()
+
+ggplotly(na_last4ccnum, tooltip = "text")
+```
+
+Based on the total amount of transactions with missing credit card, _National Refinery_ has a transaction on _2014-01-08_ with a price of _4367.63_.
+_Stewart and Sons Fabrication_ has a transaction on _2014-01-13_ with a price of _4071.95_ and another one on _2014-01-15_ with a price of _4485.38_.
+
+The discrepancies may be caused by employees who bought the items from these locations with cash instead of credit card but still used the loyalty card.
+
+
+Generate another interactive heatmap using _ggplot_ and _plotly_ based on the amount of transactions with missing _loyaltynum_.
+
+```{r q2 missing loyaltynum, fig.height=8}
+
+missing_loyaltynum <- cc_loyalty_data %>%
+   filter(is.na(loyaltynum))
+
+na_loyaltynum  <- ggplot(data = missing_loyaltynum,
+                         aes(x=date, y=reorder(location, desc(location)),
+                                   fill = price,
+                                   text = paste("Location :", location,"\n",
+                                                "Date:", timestamp,"\n",
+                                                "Total Amount of Transaction:", price))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
+  ggtitle("Transactions with Missing Loyalty Data by Date") +
+  labs(x = "Date of Transaction", y = "Locations") +
+  theme_minimal()
+
+ggplotly(na_loyaltynum, tooltip = "text")
+```
+
+Based on the total amount of transactions with missing loyalty card, _Frydos Autosupply n More_ has a transaction on _2014-01-13 19:20:00_ with a price of _10,000_.
+
+The discrepancy is more suspicious since the person who bought the items did not use his loyalty card which may imply possible misuse of the credit card when making the transaction.
+
+
+Add the gps and car data by creating a movement path from GPS points using the CarIDs as unique identifier.
+Filter the data around the time of transaction from _2014-01-13 19:00 to 21:00_.
+
+```{r q2 gps path 0113}
+gps_path_0113 <- car_gps_sf %>%
+  filter(timestamp >= "2014-01-13 19:00" & timestamp <= "2014-01-13 21:00") %>%
+  group_by(CarID, date) %>%
+  summarize(m = mean(timestamp), 
+            do_union=FALSE) %>%
+  st_cast("LINESTRING") 
+```
+
+
+Plot the gps path on the backgroup tourist map and identity which CarIDs are within the vicinity of _Frydos Autosupply n More_.
+
+```{r q2 gps path 0113 1900}
+gps_path_selected_0113 <- gps_path_0113 %>%
+  filter(CarID %in% c("13" , "15", "16", "34"))
+
+tmap_mode("view")
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_path_selected_0113) +
+  tm_lines() +
+  tm_facets(by = "CarID",  ncol = 1)
+```
+
+From the gps paths, CarID _"13" , "15", "16", "34"_ are within the vicinity of _Frydos Autosupply n More_ during suspicions transaction amounting to the price of _10,000_.
+
+
+Create an interative data table based on the joint gps and car and filter the date to _2014-01-13_.
+
+```{r q2 gps table}
+car_gps_0113 <- car_gps_data %>%
+  filter(timestamp >= "2014-01-13 19:00" & timestamp <= "2014-01-13 21:00") %>%
+  filter(CarID %in% c("13" , "15", "16", "34")) %>%
+  group_by(CarID, Deparment, Title, FullName) %>%
+  summarise()
+
+DT::datatable(car_gps_0113)
+```
+From the interactive table, all CarIDs identified are from the Security Department. 
+Possibly, _Isia Vann_ and _Edvard Vann_ are relatives because of the same Last Name and working together as Perimeter Controller.
 
 
 ### Q3: Owners of Credit Card and Loyalty Card
 
 **Can you infer the owners of each credit card and loyalty card? What is your evidence? Where are there uncertainties in your method? Where are there uncertainties in the data?**
 
+It is challenging to infer the owners of the credit card and loyalty card since there is no data field to join the credit card and gps data. 
 
+One possible approach to plot the gps path and check it against timestamp of the credit card transactions. 
+This approach assumes that the person driving the car is the same person making the credit card transaction.
+Additionally, it assumes that the gps coordinates, timestamp as well as the credit location and timestamp are accurate.
+
+To implement this proposed approach, it assumes that the geospatial tracking software installed in the employees car will stop tracking if the vehicle is not moving.
+Borrowing from concept of 'Point of Interest' (POI) from Virginia Tech, POI is identified if the employee stops for more than 5 minutes.
+
+Identify the POIs by computing the difference of gps timestamp. If the difference is greater than 5 minutes, it will be set to poi = TRUE.
+
+```{r q3 poi}
+gps_poi_sf <- car_gps_sf %>%
+  group_by(CarID) %>%
+  mutate(diff = timestamp - lag(timestamp, order_by=CarID)) %>%
+  mutate(poi = if_else(diff > 60*5,  TRUE, FALSE)) %>%
+  filter(poi == TRUE) %>%
+  ungroup() 
+
+glimpse(gps_poi_sf)
+```
+
+Plot the POIs on the backgroup tourist map and identity the employee locations.
+From the  _Combined Credit Card & Loyalty Transactions by Hour of Day_ heatmap of Question 1, the earliest transaction is around 3:00 AM from Kronos Mart while the last transaction is 10:00 PM from Hippokampos. This information can be used to limit the number of POIs.
+
+
+```{r q3 poi points}
+gps_poi_points <- gps_poi_sf %>%
+  filter(hour >= 3 & hour <= 23) %>%
+  select(timestamp,
+         CarID,
+         Deparment,
+         Title,
+         FullName)
+
+tmap_mode("view")
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_poi_points) +
+  tm_dots(col = 'red', border.col = 'black', size = 1, alpha = 0.5, jitter = .8) +
+  tm_facets(by = "FullName", ncol = 1)
+```
+
+Create an interative data table based on the joint credit card and infer the owner based on the POI plot.
+
+```{r q3 table cc data}
+
+cc_owner <- cc_data %>%
+  select(timestamp, location, last4ccnum)
+
+DT::datatable(cc_owner)
+```
+
+Finally, manually map the credit card transaction purchases timestamp against the POI map. This approach is very time consuming since it entails manual effort.
+As for most cases, the POI map may show certain points around the vicinity of the location but does not have any corresponding credit card purchases.
+
+The owner of the loyalty card will be known after the credit card owner has been identified. 
+As noted earlier, there is no one-to-one correspondence between the credit and loyalty card. 
+A network map can be used to visualize the number of transactions between specific credit card and loyalty card to know the highest likelihood of the loyalty card owner.
 
 ### Q4: Relationships among GASTech Personnel
 
 **Given the data sources provided, identify potential informal or unofficial relationships among GASTech personnel. Provide evidence for these relationships.**
+
+Similar to question 3, identify the POIs by computing the difference of gps timestamp. 
+Afterwards, identity who are within 'close contact' of each employee based difference of their gps coordinates within the same time period.
+This can help establish the relationship of GASTech personnel based on who are their meeting at the same place and at the same time.
+
+```{r q4 poi network}
+
+gps_poi_network <- car_gps_data %>%
+  group_by(CarID) %>%
+  mutate(poi_diff = timestamp - lag(timestamp, order_by=CarID)) %>%
+  mutate(poi = if_else(poi_diff > 60*5,  TRUE, FALSE)) %>%
+  filter(poi == TRUE) %>%
+  ungroup() %>%
+  mutate(lat_diff = lat - lag(lat, order_by=timestamp))%>%
+  mutate(long_diff = long - lag(long, order_by=timestamp)) %>%
+  mutate(close_contact = if_else(abs(lat_diff) <=0.001 & abs(long_diff) <=0.001, TRUE, FALSE))%>%
+  filter(close_contact == TRUE) %>%
+  ungroup()
+  
+glimpse(gps_poi_network)
+```
+
 
 
 
