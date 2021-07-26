@@ -87,7 +87,6 @@ library(tools)
 md5sum("data/aspatial/gps.csv") == md5sum("data_2014/aspatial/gps.csv")
 ```
 
-
 - **_MC2-Tourist.jpg_** is the tourist map of Abila, the Capital city of Kronos, with identified location of interest. 
 
   + Based on visual inspection and _md5sum_ code chunk below, there are no differences between the 2021 and 2014 tourist map.

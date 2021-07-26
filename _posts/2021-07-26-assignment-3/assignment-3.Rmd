@@ -214,16 +214,16 @@ Plot the POIs on the backgroup tourist map and identity the employee locations.
 From the  _Combined Credit Card & Loyalty Transactions by Hour of Day_ heatmap of Question 1, the earliest transaction is around 3:00 AM from Kronos Mart while the last transaction is 10:00 PM from Hippokampos. This information can be used to limit the number of POIs.
 
 
-```{r q3 poi points}
+```{r q3 poi points, fig.height=40}
 gps_poi_points <- gps_poi_sf %>%
-  filter(hour >= 3 & hour <= 23) %>%
+  filter(hour >= 2 & hour <= 23) %>%
   select(timestamp,
          CarID,
          Deparment,
          Title,
          FullName)
 
-tmap_mode("view")
+tmap_mode("plot")
 tm_shape(bgmap) +
   tm_rgb(bgmap, r = 1,g = 2,b = 3,
        alpha = NA,
@@ -232,11 +232,36 @@ tm_shape(bgmap) +
        max.value = 255) +
   tm_shape(gps_poi_points) +
   tm_dots(col = 'red', border.col = 'black', size = 1, alpha = 0.5, jitter = .8) +
-  tm_facets(by = "FullName", ncol = 1)
+  tm_facets(by = "FullName", ncol = 2)
 ```
 
 
-Create an interative data table based on the joint credit card and infer the owner based on the POI plot.
+Alternatively, plot the gps path of each employee.
+
+
+```{r q3 gps path, fig.height=40}
+gps_path <- car_gps_sf %>%
+  group_by(CarID) %>%
+  summarize(m = mean(timestamp),
+            do_union=FALSE) %>%
+  st_cast("LINESTRING")
+
+tmap_mode("plot")
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_path) +
+  tm_lines() +
+  tm_facets(by = "CarID",  ncol = 2)
+```
+
+
+
+Create an interactive data table based on the joint credit card and infer the owner based on the POI plot.
+
 
 ```{r q3 table cc data}
 
@@ -281,6 +306,5 @@ Example of which are _6901 and L9363_ with 28 transactions; _7117 and L6417_ als
 
 Nevertheless, even for credit card 6901, there are still _9 transactions_ when loyalty card was not used.
 Similarly, credit card 7117 has _3 transactions_ when loyalty card was not used.
-
 
 Click [**HERE**](https://adolit-vaa.netlify.app/posts/2021-07-26-assignment-4/) to view the _Visual Detective Assignment Part 4_.

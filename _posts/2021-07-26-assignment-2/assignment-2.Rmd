@@ -203,6 +203,7 @@ popular_combine <- cc_loyalty_data %>%
 
 ggplotly(popular_combine, tooltip = "text")
 ```
+
 Based on the combined combined credit card and loyalty data, the most popular location is _Katerina's Cafe_ with a total of 256 transactions, followed by _Hippokampos_ with 213 transactions and _Guy's Gyro_ with 187 transactions.
 
 
@@ -227,6 +228,7 @@ popular_day_location <- ggplot(data = day_location_count,
 
 ggplotly(popular_day_location, tooltip = "text")
 ```
+
 Based on the combined combined credit card and loyalty data, _Brew've Been Served_ is popular on weekdays, Monday to Friday, with no transactions on weekend. Probably this location is only open weekday.
 
 _Guy's Gyro, Hippokampos, and Katerina's Cafe_ are very popular throughout the week, Sunday to Monday.
@@ -386,9 +388,9 @@ Plot the gps path on the background tourist map and identity which CarIDs are wi
 
 ```{r q2 gps path 0113 1900}
 gps_path_selected_0113 <- gps_path_0113 %>%
-  filter(CarID %in% c("13" , "15", "16", "34"))
+  filter(CarID %in% c("13" , "15", "16", "34")) 
 
-tmap_mode("view")
+tmap_mode("plot")
 tm_shape(bgmap) +
   tm_rgb(bgmap, r = 1,g = 2,b = 3,
        alpha = NA,
@@ -397,9 +399,8 @@ tm_shape(bgmap) +
        max.value = 255) +
   tm_shape(gps_path_selected_0113) +
   tm_lines() +
-  tm_facets(by = "CarID",  ncol = 1)
+  tm_facets(by = "CarID",  ncol = 4)
 ```
-
 From the gps paths, CarID _"13" , "15", "16", "34"_ are within the vicinity of _Frydos Autosupply n More_ during suspicions transaction amounting to the price of _10,000_.
 
 
@@ -414,109 +415,8 @@ car_gps_0113 <- car_gps_data %>%
 
 DT::datatable(car_gps_0113)
 ```
+
 From the interactive table, all CarIDs identified are from the Security Department. 
 Possibly, _Isia Vann_ and _Edvard Vann_ are relatives because of the same Last Name and working together as Perimeter Controller.
-
-
-## Q3: Owners of Credit Card and Loyalty Card
-
-
-**Can you infer the owners of each credit card and loyalty card? What is your evidence? Where are there uncertainties in your method? Where are there uncertainties in the data?**
-
-It is challenging to infer the owners of the credit card and loyalty card since there is no data field to join the credit card and gps data. 
-
-One possible approach to plot the gps path and check it against timestamp of the credit card transactions. 
-This approach assumes that the person driving the car is the same person making the credit card transaction.
-Additionally, it assumes that the gps coordinates, timestamp as well as the credit location and timestamp are accurate.
-
-To implement this proposed approach, it assumes the geospatial tracking software installed in the employees car will stop tracking if the vehicle is not moving.
-Borrowing from concept of 'Point of Interest' (POI) from Virginia Tech, POI is identified if the employee stops for more than 5 minutes.
-
-
-Identify the POIs by computing the difference of gps timestamp. If the difference is greater than 5 minutes, it will be set to poi = TRUE.
-
-```{r q3 poi}
-gps_poi_sf <- car_gps_sf %>%
-  group_by(CarID) %>%
-  mutate(diff = timestamp - lag(timestamp, order_by=CarID)) %>%
-  mutate(poi = if_else(diff > 60*5,  TRUE, FALSE)) %>%
-  filter(poi == TRUE) %>%
-  ungroup() 
-
-glimpse(gps_poi_sf)
-```
-
-
-Plot the POIs on the backgroup tourist map and identity the employee locations.
-From the  _Combined Credit Card & Loyalty Transactions by Hour of Day_ heatmap of Question 1, the earliest transaction is around 3:00 AM from Kronos Mart while the last transaction is 10:00 PM from Hippokampos. This information can be used to limit the number of POIs.
-
-
-```{r q3 poi points}
-gps_poi_points <- gps_poi_sf %>%
-  filter(hour >= 3 & hour <= 23) %>%
-  select(timestamp,
-         CarID,
-         Deparment,
-         Title,
-         FullName)
-
-tmap_mode("view")
-tm_shape(bgmap) +
-  tm_rgb(bgmap, r = 1,g = 2,b = 3,
-       alpha = NA,
-       saturation = 1,
-       interpolate = TRUE,
-       max.value = 255) +
-  tm_shape(gps_poi_points) +
-  tm_dots(col = 'red', border.col = 'black', size = 1, alpha = 0.5, jitter = .8) +
-  tm_facets(by = "FullName", ncol = 1)
-```
-
-
-Create an interative data table based on the joint credit card and infer the owner based on the POI plot.
-
-```{r q3 table cc data}
-
-cc_owner <- cc_data %>%
-  select(timestamp, location, last4ccnum)
-
-DT::datatable(cc_owner)
-```
-
-Finally, manually map the credit card transaction purchases timestamp against the POI map. This approach is very time consuming since it entails manual effort.
-As for most cases, the POI map may show certain points around the vicinity of the location but does not have any corresponding credit card purchases.
-
-
-The owner of the loyalty card will be known after the credit card owner has been identified. 
-As noted earlier, there is no one-to-one correspondence between the credit and loyalty card. 
-
-The heatmap below visualizes the number of transactions between specific credit card and loyalty card to know the highest likelihood of the loyalty card owner.
-
-```{r count cc loyal,fig.height=8}
-cc_loyal_count <- cc_loyalty_data %>%
-  group_by(last4ccnum,loyaltynum) %>%
-  summarise(count=n())
-  
-cc_loyal_correlate <- ggplot(data = cc_loyal_count,
-                               aes(x=loyaltynum, y=as.factor(last4ccnum),
-                                   fill = count,
-                                   text = paste("Last 4 Credit Card Number :", last4ccnum,"\n",
-                                                "Loyalty Card Number:", loyaltynum,"\n",
-                                                "Number of transactions :", count))) +
-  geom_tile()+
-  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
-  ggtitle("Correlation of Credit Card & Loyalty Card by Number of Transactions") +
-  labs(x = "Loyalty Card Number",y = "Credit Card Number") + 
-  theme_minimal() + 
-  theme(axis.text.x = element_text(angle = 90))
-
-ggplotly(cc_loyal_correlate, tooltip = "text")
-```
-
-From the heatmap, it can seen that certain combination of credit card number and loyalty card are most often used together.
-Example of which are _6901 and L9363_ with 28 transactions; _7117 and L6417_ also with 28 transactions.
-
-Nevertheless, even for credit card 6901, there are still _9 transactions_ when loyalty card was not used.
-Similarly, credit card 7117 has _3 transactions_ when loyalty card was not used.
 
 Click [**HERE**](https://adolit-vaa.netlify.app/posts/2021-07-26-assignment-3/) to view the _Visual Detective Assignment Part 3_.
