@@ -181,139 +181,47 @@ car_gps_sf <- left_join(gps_sf,
 
 # 4. Proposed Solutions
 
-## Q4: Relationships among GASTech Personnel
-
-**Given the data sources provided, identify potential informal or unofficial relationships among GASTech personnel. Provide evidence for these relationships.**
+## Q3: Owners of Credit Card and Loyalty Card
 
 
-Similar to question 3, identify the POIs by computing the difference of gps timestamp. 
+**Can you infer the owners of each credit card and loyalty card? What is your evidence? Where are there uncertainties in your method? Where are there uncertainties in the data?**
 
-Afterwards, identify who are within 'close contact' of each employee based on the difference of their gps coordinates within the same time period.
+It is challenging to infer the owners of the credit card and loyalty card since there is no data field to join the credit card and gps data. 
 
-This can help establish the relationship of GASTech personnel according to their meetings at the same place and at the same time.
+One possible approach to plot the gps path and check it against timestamp of the credit card transactions. 
+This approach assumes that the person driving the car is the same person making the credit card transaction.
+Additionally, it assumes that the gps coordinates, timestamp as well as the credit location and timestamp are accurate.
+
+To implement this proposed approach, it assumes the geospatial tracking software installed in the employees car will stop tracking if the vehicle is not moving.
+Borrowing from concept of 'Point of Interest' (POI) from Virginia Tech, POI is identified if the employee stops for more than 5 minutes.
 
 
-```{r q4 poi network}
-gps_poi_network <- car_gps_data %>%
+Identify the POIs by computing the difference of gps timestamp. If the difference is greater than 5 minutes, it will be set to poi = TRUE.
+
+```{r q3 poi}
+gps_poi_sf <- car_gps_sf %>%
   group_by(CarID) %>%
-  mutate(poi_diff = timestamp - lag(timestamp, order_by=CarID)) %>%
-  mutate(poi = if_else(poi_diff > 60*5,  TRUE, FALSE)) %>%
+  mutate(diff = timestamp - lag(timestamp, order_by=CarID)) %>%
+  mutate(poi = if_else(diff > 60*5,  TRUE, FALSE)) %>%
   filter(poi == TRUE) %>%
-  ungroup() %>%
-  mutate(lat_diff = lat - lag(lat, order_by=timestamp))%>%
-  mutate(long_diff = long - lag(long, order_by=timestamp)) %>%
-  mutate(close_contact = if_else(abs(lat_diff) <=0.001 & abs(long_diff) <=0.001, TRUE, FALSE))%>%
-  filter(close_contact == TRUE) %>%
-  ungroup()
-  
-glimpse(gps_poi_network)
+  ungroup() 
+
+glimpse(gps_poi_sf)
 ```
 
 
-```{r q4 poi network diagram}
-
- employee_edges <- gps_poi_network %>%
-  group_by(date, hour)%>%
-  mutate(from = FullName) %>%
-  mutate(to = lead(FullName, order_by = timestamp)) %>%
-  ungroup() %>%
-  group_by(from,to) %>%
-  summarise(weight = n())
-
- employee_nodes <- gps_poi_network %>%
-   select(FullName, Deparment, Title) %>%
-   rename(id = FullName) %>%
-   rename(group = Deparment) %>%
-   distinct()
- 
- visNetwork(employee_nodes,
-            employee_edges,
-            main = "Relationships among GASTech Personnel") %>%
-   visIgraphLayout(layout = "layout_with_fr") %>%
-   visEdges(arrows = "to", 
-            smooth = list(enabled = TRUE, 
-                          type = "curvedCW")) %>%
-   visOptions(highlightNearest = TRUE,
-             nodesIdSelection = TRUE) %>%
-   visLegend() %>%
-   visLayout(randomSeed = 123)
-```
-
-The network diagram shows the 'official' relationship of employees based on their respective departments. It also show 'unofficial' relationship based on the number of their interactions.
-
-From the  network diagram, it can be seen that _Isande Barrasca_ , a Drill Technician from the Engineering Department is an outlier.
-His only close contact to the rest of employees is _Hideki Cocinaro_ , a Site Controller from the Security Department.
-
-Similarly, _Sten Sanjorge Jr._ , IT Technician from the Information Technology Department, have minimal interactions with other employees and seems not well connected within the company.
+Plot the POIs on the backgroup tourist map and identity the employee locations.
+From the  _Combined Credit Card & Loyalty Transactions by Hour of Day_ heatmap of Question 1, the earliest transaction is around 3:00 AM from Kronos Mart while the last transaction is 10:00 PM from Hippokampos. This information can be used to limit the number of POIs.
 
 
-The heatmap below visualizes the number of interactions between employees.
-
-```{r q4 employee interaction, fig.height=8}
-employee_interact1 <- full_join(employee_edges, 
-                             employee_nodes, 
-                             by = (c("from" = "id"))) %>%
-  rename(SenderDepartment = group) %>%
-  rename(SenderTitle = Title)
-
-employee_interact2 <- full_join(employee_interact1, 
-                             employee_nodes, 
-                             by = (c("to" = "id"))) %>%
-  rename(ReceiverDepartment = group) %>%
-  rename(ReceiverTitle = Title) %>%
-  rename(Sender = from) %>%
-  rename(Receiver = to)
-
-employee_interaction  <- ggplot(data = employee_interact2,
-                         aes(x=Sender, y=Receiver,
-                                   fill = weight,
-                                   text = paste("Sender :", Sender,"\n",
-                                                "Sender Department:", SenderDepartment, "\n",
-                                                "Sender Title:", SenderTitle, "\n",
-                                                "\n",
-                                                "Receiver", Receiver,"\n",
-                                                "Receiver Department:", ReceiverDepartment, "\n",
-                                                "Receiver Title:", ReceiverTitle, "\n",
-                                                "\n",
-                                                "Number of Meetings", weight))) +
-  geom_tile()+
-  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
-  ggtitle("GAStech Personnel Relationship based on number of Interactions") +
-  labs(x = "Sender Employee", y = "Receiver Employee") +
-  theme_minimal() + 
-  theme(axis.text.x = element_text(angle = 90))
-  
-ggplotly(employee_interaction, tooltip = "text")
-```
-
-The highest number of meetings among GAStech Personnel are truck drivers with 23 interactions. Employee names are set to _NA_ since the CarID is not identified.
-The second highest number of meetings is from _Bertrand Ovan_, Group Manager of Facilities department with 14 meetings.  
-The third highest number of meetings is from _Ingrid Barranco_, SVP/CFO from Executive department with 12 meetings.
-
-
-## Q5: Evidence of Suspicious Activities
-
-**Do you see evidence of suspicious activity? Identify 1- 10 locations where you believe the suspicious activity is occurring, and why.**
-
-Building on the POI network with employee interactions from Question 4, covert the gps coordinates to simple feature and plot it in the tourist map.
-
-```{r q5 poi gps}
-
-gps_poi_network_sf <- st_as_sf(gps_poi_network,
-                               coords = c("long", "lat"),
-                               crs= 4326)
-gps_poi_network_sf
-```
-
-```{r q5 poi map}
-gps_poi_network_points <- gps_poi_network_sf %>%
+```{r q3 poi points}
+gps_poi_points <- gps_poi_sf %>%
+  filter(hour >= 3 & hour <= 23) %>%
   select(timestamp,
          CarID,
          Deparment,
          Title,
-         FullName,
-         date,
-         hour)
+         FullName)
 
 tmap_mode("view")
 tm_shape(bgmap) +
@@ -322,95 +230,57 @@ tm_shape(bgmap) +
        saturation = 1,
        interpolate = TRUE,
        max.value = 255) +
-  tm_shape(gps_poi_network_points) +
+  tm_shape(gps_poi_points) +
   tm_dots(col = 'red', border.col = 'black', size = 1, alpha = 0.5, jitter = .8) +
-  tm_facets(by = "date", ncol = 1)
+  tm_facets(by = "FullName", ncol = 1)
 ```
-**1. Frydos Autosupply n More**
-
-This is the suspicious place because of the _10,000_ spent on _2014-01-13_.
-Additionally, members of the Security department frequently visit this place:
-
-![](img/q5_02_frydos.png){width=95%}
-![](img/q5_02_frydos2.png){width=95%}
-
-![](img/q5_02_frydos3.png){width=95%}
-![](img/q5_02_frydos4.png){width=95%}
 
 
+Create an interative data table based on the joint credit card and infer the owner based on the POI plot.
 
-**2. Spetsons Park**
+```{r q3 table cc data}
 
-On _January 07, 2014, 3:25_, Isia Vann visited this place which is very unusual especially in the wee hours of the morning.
+cc_owner <- cc_data %>%
+  select(timestamp, location, last4ccnum)
 
-![](img/q5_01_spetson_park_2.png){width=95%}
+DT::datatable(cc_owner)
+```
 
-
-**3. CEO's house**
-
-On _January 10, 2014, 23:23_, Axel Calzas visited the place where the CEO is residing, he was followed by Kanon Herrero at arond _23:33_
-After a few hours, Felix Balas can also be seen around the vicinity On _January 11, 2014, 00:25_.
-
-Photo Evidences|   
-
-![](img/q5_05_ceo_house.png){width=95%}
-![](img/q5_05_ceo_house3.png){width=95%}
-
-![](img/q5_05_ceo_house2.png){width=95%}
+Finally, manually map the credit card transaction purchases timestamp against the POI map. This approach is very time consuming since it entails manual effort.
+As for most cases, the POI map may show certain points around the vicinity of the location but does not have any corresponding credit card purchases.
 
 
-**4. Chostus Hotel**
+The owner of the loyalty card will be known after the credit card owner has been identified. 
+As noted earlier, there is no one-to-one correspondence between the credit and loyalty card. 
 
-On _January 08, 2014, around 13:00_, both _Brand Tempestad_ and _Elsa Orilla_ were around the vicinity of hotel.
-This is unusual because it is still office hours on a weekday and they were in a hotel.
+The heatmap below visualizes the number of transactions between specific credit card and loyalty card to know the highest likelihood of the loyalty card owner.
 
-![](img/q5_07_hote.png){width=95%}
+```{r count cc loyal,fig.height=8}
+cc_loyal_count <- cc_loyalty_data %>%
+  group_by(last4ccnum,loyaltynum) %>%
+  summarise(count=n())
+  
+cc_loyal_correlate <- ggplot(data = cc_loyal_count,
+                               aes(x=loyaltynum, y=as.factor(last4ccnum),
+                                   fill = count,
+                                   text = paste("Last 4 Credit Card Number :", last4ccnum,"\n",
+                                                "Loyalty Card Number:", loyaltynum,"\n",
+                                                "Number of transactions :", count))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightsteelblue1", high = "royalblue4") +
+  ggtitle("Correlation of Credit Card & Loyalty Card by Number of Transactions") +
+  labs(x = "Loyalty Card Number",y = "Credit Card Number") + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 90))
 
-![](img/q5_07_hotel_2.png){width=95%}
+ggplotly(cc_loyal_correlate, tooltip = "text")
+```
 
+From the heatmap, it can seen that certain combination of credit card number and loyalty card are most often used together.
+Example of which are _6901 and L9363_ with 28 transactions; _7117 and L6417_ also with 28 transactions.
 
-**5. Warehouse near Sannan Park**
-
-On _January 10, 2014, 22:20_, Minke Mies visited this place. He also frequently visits the location around the _Frydos Autosupply n More_.
-![](img/q5_08_warehouse_3.png){width=95%}
-
-
-# 5. Conclusion
-
-This assignment attempts to solve the 2021 VAST Challenge: Mini-Challenge 2 by applying different visual analytics concepts, methods, and techniques.
-
-
-The interactive bar chart was used to identity the most popular locations which is Katerina's Cafe while interactive heatmap was used to determine the day and time when GAStech employees visit the place. 
-The interactive boxplot was used to perform initial analysis of outliers while _plot_anomaly_diagnostics_ function was used to diagnose unusual purchases particularly the _10,000_ transaction in _Frydos Autosupply n More_. 
-
-
-Interactive heatmap was also used to assess the anomalies where it shows the transactions with the missing credit card and loyalty card data.
-Adding the gps and car data and plotting the movement path using _tmap_, 4 employees were identified who may be involved in the suspicious transactions in _Frydos Autosupply n More_.
-
-
-An approach was proposed to determine the owners of the loyalty and credit card data. 
-It involves mapping the credit card transaction purchases timestamp against the interactive 'Point of Interest' map.
-
-
-Similar to POI, relationship among the GASTech personnel was establish based on their 'close contact' with each other where they are meeting at the same place and at the same time.
-An interactive network graph and heatmap were used to show the GAStech personel relationships based on the number of their interactions.
+Nevertheless, even for credit card 6901, there are still _9 transactions_ when loyalty card was not used.
+Similarly, credit card 7117 has _3 transactions_ when loyalty card was not used.
 
 
-Synthesizing the information from all the questions 1 to 4 and using interactive POI maps, several locations where identified to be the place where suspicious activities are happening.
-
-
-Using relevant R data visualisation and data analysis packages, the previous submissions from 2014 VAST Challenge were enhanced by adding interactive features and making the visualisation reproducible.
-
-
-Finally, this assignment can still be further improved by using RShiny App and have a more friendly user interface to perform the investigation.
-
-
-# 6. References
-
-* [ISSS608 Assignment Instructions](https://isss608.netlify.app/assignment.html)
-
-* [VAST Challenge 2021: Mini-Challenge 2](https://vast-challenge.github.io/2021/MC2.html)
-
-* [VAST Challenge 2014: MC2 - Patterns of Life Analysis Benchmark Repository](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC2%20-%20Patterns%20of%20Life%20Analysis/)
-
-* Whiting, Mark & Cook, Kristin & Grinstein, Georges & Liggett, Kristen & Cooper, Michael & Fallon, John & Morin, Marc. (2014). [VAST challenge 2014: The Kronos incident](http://vis.cs.ucdavis.edu/vis2014papers/VIS_Conference/vast/challenge/whiting.pdf)
+Click [**HERE**](https://adolit-vaa.netlify.app/posts/2021-07-26-assignment-4/) to view the _Visual Detective Assignment Part 4_.
